@@ -4,8 +4,7 @@
 class Character
 {
 private:
-  // round represents for whether a character can attack
-  bool _frozen, _immune, _round;
+  bool _frozen, _immune;
   Value _health;
 protected:
   Value _attack;
@@ -48,7 +47,7 @@ public:
   }
   bool canAttack()
   {
-    return round && this->attack() > 0;
+    return attack() > 0;
   }
 };
 
