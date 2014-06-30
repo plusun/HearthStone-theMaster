@@ -4,13 +4,14 @@
 class Character
 {
 private:
-  bool _frozen, _immune;
+  // round represents for whether a character can attack
+  bool _frozen, _immune, _round;
   Value _health;
 protected:
   Value _attack;
 public:
-  Character(Value h,  Value a, bool f = false, bool i = false):
-    _health(h), _attack(a), _frozen(f), _immune(i)
+  Character(Value h,  Value a, bool r = true, bool f = false, bool i = false):
+    _health(h), _attack(a), _round(r), _frozen(f), _immune(i)
   {
   }
   Value health()
@@ -44,6 +45,10 @@ public:
   void immune(new_immune)
   {
     _immune = new_immune;
+  }
+  bool canAttack()
+  {
+    return round && this->attack() > 0;
   }
 };
 
@@ -96,5 +101,12 @@ public:
 	_weapon = new_weapon;
       }
   }
+};
 
+enum Race {};
+
+class Minion: public Character
+{
+private:
+public:
 };
