@@ -115,5 +115,7 @@ enum Race {BEAST};
 class Minion: public Character
 {
 private:
+  Race _race;
+  Value _extra_health;
 public:
 };
