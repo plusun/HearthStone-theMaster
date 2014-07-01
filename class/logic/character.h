@@ -5,7 +5,7 @@ class Character
 {
 private:
   bool _frozen, _immune;
-  Value _health;
+  Value _health, _max_health;
 protected:
   Value _attack;
 public:
@@ -20,6 +20,14 @@ public:
   void health(Value new_health)
   {
     _health = new_health;
+  }
+  Value maxHealth()
+  {
+    return _max_health;
+  }
+  void maxHealth(new_max_health)
+  {
+    _max_health = new_max_health;
   }
   virtual Value attack()
   {
@@ -102,7 +110,7 @@ public:
   }
 };
 
-enum Race {};
+enum Race {BEAST};
 
 class Minion: public Character
 {
