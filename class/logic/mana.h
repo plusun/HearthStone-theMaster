@@ -27,4 +27,8 @@ public:
 	{
 		inc_cur_mana(0-n);
 	}
+	void restore_mana()
+	{
+		_cur_mana = _max_mana;
+	}
 };

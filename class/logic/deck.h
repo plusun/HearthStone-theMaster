@@ -27,5 +27,5 @@ deck::deck()
 
 int deck::give_card()
 {
-
+	return _card[--_amount];
 }

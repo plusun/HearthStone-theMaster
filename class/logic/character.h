@@ -9,8 +9,8 @@ private:
 protected:
   Value _attack;
 public:
-  Character(Value h,  Value a, bool r = true, bool f = false, bool i = false):
-    _health(h), _attack(a), _round(r), _frozen(f), _immune(i)
+  Character(Value h,  Value a, bool f = false, bool i = false):
+    _health(h), _attack(a), _frozen(f), _immune(i)
   {
   }
   Value health()
@@ -116,6 +116,9 @@ class Minion: public Character
 {
 private:
   Race _race;
-  Value _extra_health;
+  Value _ori_health;
+  Value _ori_attack;
 public:
+	vector<Buff> _buff;
+	void _attack()
 };
