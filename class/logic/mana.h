@@ -15,7 +15,7 @@ public:
 	{
 		return _cur_mana;
 	}
-	void inc_max_mana(Value n = 1)
+	void inc_max_mana(Value n)
 	{
 		_max_mana += n;
 	}
