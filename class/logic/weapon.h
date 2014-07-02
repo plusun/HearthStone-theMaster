@@ -25,4 +25,4 @@ public:
   {
     _durable = new_durable;
   }
-}
+};

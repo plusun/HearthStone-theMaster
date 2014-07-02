@@ -30,4 +30,4 @@ public:
 		_minion.pop_back();
 		amount--;
 	}
-}
+};
