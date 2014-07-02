@@ -4,12 +4,12 @@ class Handcard
 {
 public:
 	int amount;
-	vector<card> _card;
+	vector<Card> _card;
 	Handcard():amount(0)
 	{
 		_minion.clear();
 	}
-	void draw_card(card c)
+	void draw_card(Card c)
 	{
 		amount++;
 		_minion.push_back(m);
