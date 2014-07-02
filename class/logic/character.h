@@ -110,7 +110,7 @@ public:
   }
 };
 
-enum Race {BEAST};
+enum Race {none=0, beast, murloc, pirate, dragon, demon, totem};
 
 class Minion: public Character
 {

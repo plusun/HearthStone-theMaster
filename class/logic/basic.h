@@ -1,1 +1,1 @@
-typedef unsigned int Value;
+typedef int Value;
