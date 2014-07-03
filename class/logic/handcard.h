@@ -12,7 +12,7 @@ public:
 	void draw_card(Card c)
 	{
 		amount++;
-		_minion.push_back(m);
+		_card.push_back(c);
 	}
 	Card use card(int position)
 	{

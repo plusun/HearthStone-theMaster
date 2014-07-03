@@ -13,3 +13,16 @@ Wisp_card::cast()
 	_minion = new Wisp;
 
 }
+
+class Murloc_raider_card : public Minion_card
+{
+public:
+	Murloc_raider(1,NULL);
+}
+
+Murloc_raider_card::cast()
+{
+	_minion = new Murloc_raid;
+}
+
+class Bloodfen_raptor_card 
