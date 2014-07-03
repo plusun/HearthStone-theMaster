@@ -1,0 +1,4 @@
+Game为最大的类，包括了2个Player实体
+Player包括了hero,deck,battlefield,handcard,mana等
+battlefield包括了position和n个minion
+handcard包括了n张card
