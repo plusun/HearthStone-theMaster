@@ -6,6 +6,8 @@
 
 
 enum checkpoint {turn_start = 0, summon_minion, want_to_attack, hurt, died, cast_spell, turn_end};
+#define maxhp 30
+
 
 class Sustainable_effect
 {
@@ -31,6 +33,14 @@ public:
 	Player();
 	void init();
 	void turn();
+}
+
+Player::Player()
+{
+	_hero(maxhp);
+	is_host = false;
+	is_first = false;
+
 }
 
 void Player::init()
