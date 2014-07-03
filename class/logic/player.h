@@ -20,7 +20,6 @@ public:
 class Player
 {
 public:
-	Hero _hero;
 	Deck _deck;
 	Battlefield _battlefield
 	Handcard _handcard;
@@ -37,7 +36,6 @@ public:
 
 Player::Player()
 {
-	_hero(maxhp);
 	is_host = false;
 	is_first = false;
 
