@@ -21,6 +21,7 @@ public:
   {
     _cost = new_cost;
   }
+  Sprite *Sprite_handcard;
 };
 
 class MinionCard: public Card

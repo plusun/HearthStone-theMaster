@@ -71,6 +71,22 @@ bool GameLayer::init()
 	this->addChild(pLabel, 1);  
 
 	/*init player*/
+	if( player1.is_first == true )
+	{
+		player1._handcard.amount = 3;
+	}
+	else
+	{
+		player1._handcard.amount = 4;
+	}
+	/*draw card*/
+
+	if(player1._handcard.amount = 3)
+	{
+		player1._handcard._card[0].Sprite_card = Sprite::create("time2.png");
+		player1._handcard._card[0].Sprite_card -> setPosition(Point(winSize.width / 2+10, winSize.height / 2-275));
+
+	}
 
 
 	this->schedule(schedule_selector(GameLayer::timeCallback), 10.0f);

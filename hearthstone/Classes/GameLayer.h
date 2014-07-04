@@ -12,6 +12,8 @@ class GameLayer : public cocos2d::Layer
 {
 public:
 	bool init();
+	Player player1;
+	Player player2;
 	
 	static cocos2d::Scene* createScene();
 	CREATE_FUNC(GameLayer);

@@ -32,6 +32,7 @@ public:
 	Player* oppoent;
 public:
 	Player();
+
 	void init();
 	void turn();
 };

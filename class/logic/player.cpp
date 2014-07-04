@@ -1,12 +1,13 @@
 #include "player.h"
 
+
 Player::Player()
 {
 	is_host = false;
 	is_first = false;
 }
 
-void Player::init()
+void Player::init()					//game start init
 {
 	if (is_first)
 	{

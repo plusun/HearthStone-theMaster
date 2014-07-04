@@ -1,3 +1,6 @@
+#ifndef __HADNSCARD_H__
+#define __HANDSCARD_H__
+
 #include "card.h"
 
 class Handcard
@@ -25,3 +28,5 @@ public:
 	}
 
 };
+
+#endif
