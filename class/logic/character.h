@@ -59,6 +59,14 @@ public:
   {
     return attack() > 0;
   }
+  virtual void attacking(Character *who)
+  {
+    health(health() - who->attack())
+  }
+  virtual void attacked(Character *who)
+  {
+    health(health() - who->attack());
+  }
 };
 
 class Hero: public Character
@@ -99,6 +107,12 @@ public:
   {
     return _weapon;
   }
+  void destroyWeapon()
+  {
+    if (_weapon != NULL)
+      delete _weapon;
+    _weapon = NULL;
+  }
   void weapon(Weapon *new_weapon)
   {
     if (new_weapon != NULL &&
@@ -108,6 +122,16 @@ public:
 	if (_weapon != NULL)
 	  delete _weapon;
 	_weapon = new_weapon;
+      }
+  }
+  void attacking(Character *who)
+  {
+    health(health() - who->attack());
+    if (weapon() != NULL)
+      {
+	weapon()->durable(weapon->durable() - 1);
+	if (weapon()->durable() <= 0)
+	  destroyWeapon();
       }
   }
 };

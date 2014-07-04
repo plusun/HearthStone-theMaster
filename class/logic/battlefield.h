@@ -6,10 +6,12 @@ class Battlefield
 public:
   vector<Minion *> _minion;
   vector<Hero *> _hero;
-  Battlefield()
+  Battlefield(Hero *one, Hero *another)
   {
     _minion.clear();
     _hero.clear();
+    _hero.push_back(one);
+    _hero.push_back(another);
   }
   ~Battlefield()
   {
@@ -38,5 +40,14 @@ public:
     if (_minion[position] != NULL)
       delete _minion[position];
     _minion.erase(_minion.begin() + position);
+  }
+  static bool attack(Character *a, Character *b)
+  {
+    if (!a->canAttack())
+      return false;
+
+    a->attacking(b);
+    b->attacked(a);
+    return true;
   }
 }
