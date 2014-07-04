@@ -18,7 +18,7 @@ Game::Game()
 	if (t)
 		_p1->is_first = true;
 	else
-		_p1->is_first = true;
+		_p2->is_first = true;
 	_p1->is_host = true;
 }
 

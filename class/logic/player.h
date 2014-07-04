@@ -27,7 +27,7 @@ public:
 	Secret_slot _secret;
 	bool is_host;
 	bool is_first;
-
+	Player* oppoent;
 public:
 	Player();
 	void init();
@@ -38,7 +38,6 @@ Player::Player()
 {
 	is_host = false;
 	is_first = false;
-
 }
 
 void Player::init()
@@ -55,7 +54,7 @@ void Player::init()
 		for (int i = 0; i < 4; i++)
 			_handcard.draw_card(_deck.give_card());
 	}
-
+	opponent = receive_from_server();
 };
 
 void Player::turn()
