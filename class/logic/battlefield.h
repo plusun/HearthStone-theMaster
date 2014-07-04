@@ -45,7 +45,6 @@ public:
       delete _minion[side][position];
     _minion[side].erase(_minion[side].begin() + position);
   }
-  /*
   static bool attack(Character *a, Character *b)
   {
     if (!a->canAttack())
@@ -54,7 +53,6 @@ public:
     a->attacking(b);
     b->attacked(a);
     return true;
-  }*/
 };
 
 #endif
