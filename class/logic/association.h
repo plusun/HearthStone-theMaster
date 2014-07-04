@@ -3,9 +3,6 @@
 
 using namespace std;
 
-Minion* transform(int)
-{
-	Minion* tmp;
+map<int, Card> mapcard;
+map<int, Minion> mapminion;
 
-
-}
