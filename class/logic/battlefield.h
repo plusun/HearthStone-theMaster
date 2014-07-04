@@ -26,20 +26,13 @@ public:
       if (_hero[i] != NULL)
 	delete _hero[i];
   }
-<<<<<<< HEAD
+
   void summon_minion(Minion* m, int side, int position = -1)
-=======
-  void summon_minion(minion* m, int side, int position = -1)
->>>>>>> 670a108ac672ecad28728448adafa15d819a8531
   {
     if (position < 0 || position > _minion[side].size())
       _minion[side].push_back(m);
     else
-<<<<<<< HEAD
       _minion[side].insert(_minion[side].begin() + position,m);
-=======
-      _minion[side].insert(_minion[side].begin() + position);
->>>>>>> 670a108ac672ecad28728448adafa15d819a8531
   }
   void destroy_minion(int position,int side)
   {
