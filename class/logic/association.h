@@ -1,13 +1,8 @@
-#ifndef ASSOCIATION
-#define ASSOCIATION
-
-#include <map>
-#include "card.h"
-#include "minion.h"
+#include "card_test.h"
+#include "minion_test.h"
 
 using namespace std;
 
 map<int, Card> mapcard;
 map<int, Minion> mapminion;
 
-#endif

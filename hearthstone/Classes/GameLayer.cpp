@@ -70,10 +70,15 @@ bool GameLayer::init()
 	pLabel->setPosition(ccp(winSize.width / 2+390, winSize.height / 2-150));  
 	this->addChild(pLabel, 1);  
 
+	/*assume palyer1 is first */
+	player1.is_first = true;
+
 	/*init player*/
+	player1.init();
 	if( player1.is_first == true )
 	{
 		player1._handcard.amount = 3;
+		
 	}
 	else
 	{
@@ -83,13 +88,15 @@ bool GameLayer::init()
 
 	if(player1._handcard.amount = 3)
 	{
-		player1._handcard._card[0].Sprite_card = Sprite::create("time2.png");
-		player1._handcard._card[0].Sprite_card -> setPosition(Point(winSize.width / 2+10, winSize.height / 2-275));
-
+		for(int i = 0 ; i < player1._handcard.amount; i++)
+		{
+			player1._handcard._card[i].Sprite_card = Sprite::create("218.png");
+			player1._handcard._card[i].Sprite_card -> setPosition(Point(100 + 100 * i, winSize.height / 2-260));
+			this->addChild(player1._handcard._card[i].Sprite_card);
+		}
 	}
-
-
-	this->schedule(schedule_selector(GameLayer::timeCallback), 10.0f);
+	
+	card_move(player1);
     return true;
 
 }
@@ -111,3 +118,51 @@ void GameLayer::timeCallback(float ct)
 {
 
 }
+
+void GameLayer::card_move(Player &player1)
+{
+	auto listener1 = EventListenerTouchOneByOne::create();//创建一个触摸监听
+	listener1->setSwallowTouches(true); //设置是否想下传递触摸
+ 
+	//通过 lambda 表达式 直接实现触摸事件的回掉方法
+	listener1->onTouchBegan = [](Touch* touch, Event* event){
+    auto target = static_cast<Sprite*>(event->getCurrentTarget());
+    Point locationInNode = target->convertToNodeSpace(touch->getLocation());
+    Size s = target->getContentSize();
+    Rect rect = Rect(0, 0, s.width, s.height);
+    
+    if (rect.containsPoint(locationInNode))
+    {
+        log("sprite began... x = %f, y = %f", locationInNode.x, locationInNode.y);
+        target->setOpacity(180);
+        return true;
+    }
+    return false;
+	};
+ 
+	listener1->onTouchMoved = [](Touch* touch, Event* event){
+    auto target = static_cast<Sprite*>(event->getCurrentTarget());
+    target->setPosition(target->getPosition() + touch->getDelta());
+	};
+ 
+	listener1->onTouchEnded = [=](Touch* touch, Event* event){
+	};
+ 
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener1, player1._handcard._card[1].Sprite_card);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener1->clone(), player1._handcard._card[2].Sprite_card);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener1->clone(), player1._handcard._card[0].Sprite_card);
+
+}
+
+ bool GameLayer:: onTouchBegan(Touch *touch, Event *unused_event)
+{
+	AllocConsole(); freopen("CONIN$", "r", stdin);
+ freopen("CONOUT$", "w", stdout); freopen("CONOUT$", "w", stderr);
+	 CCLOG("touch menu");  
+        return true; 
+};
+void GameLayer:: onTouchMoved(Touch *touch, Event *unused_event)
+{
+}; 
+void GameLayer:: onTouchEnded(Touch *touch, Event *unused_event){}; 
+void GameLayer:: onTouchCancelled(Touch *touch, Event *unused_event){};

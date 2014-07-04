@@ -1,8 +1,8 @@
-#ifndef _CLASS_PLAYER_
-#define _CLASS_PLAYER_
+#ifndef __PLAYER_H__
+#define __PLAYER_H__
 
 #include "basic.h"
-#include "character.h"
+#include "character_test.h"
 #include "mana.h"
 #include "battlefield.h"
 #include "handcard.h"
@@ -15,7 +15,7 @@ class Sustainable_effect
 {
 public:
 	checkpoint _time;
-	Character _target;
+	Character _targe;
 	void effect();
 };
 

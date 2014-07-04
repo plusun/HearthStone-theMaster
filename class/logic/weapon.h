@@ -1,6 +1,3 @@
-#ifndef _CLASS_WEAPON_
-#define _CLASS_WEAPON_
-
 #include "basic.h"
 
 class Weapon
@@ -28,6 +25,4 @@ public:
   {
     _durable = new_durable;
   }
-};
-
-#endif
+}

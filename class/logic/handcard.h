@@ -1,5 +1,6 @@
-#ifndef _CLASS_HANDCARD_
-#define _CLASS_HANDCARD_
+#ifndef __HADNSCARD_H__
+#define __HANDSCARD_H__
+
 #include "card.h"
 
 class Handcard

@@ -1,6 +1,3 @@
-#ifndef _CLASS_MANA_
-#define _CLASS_MANA_
-
 #include "basic.h"
 
 class Mana
@@ -36,4 +33,3 @@ public:
 		_cur_mana = _max_mana;
 	}
 };
-#endif

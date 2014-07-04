@@ -21,6 +21,13 @@ public:
 	void cardMenuCallback(Object* pSender);
 	void endMenuCallback(Object* pSender);
 	void timeCallback(float ct);
+	void card_move(Player &player1);
+
+	
+	virtual bool onTouchBegan(Touch *touch, Event *unused_event); 
+    virtual void onTouchMoved(Touch *touch, Event *unused_event); 
+    virtual void onTouchEnded(Touch *touch, Event *unused_event); 
+    virtual void onTouchCancelled(Touch *touch, Event *unused_event);
 
 private:
 	
@@ -28,3 +35,5 @@ private:
 };
 
 #endif
+
+

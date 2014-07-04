@@ -1,10 +1,5 @@
-#ifndef _CLASS_CHARACTER_
-#define _CLASS_CHARACTER_
-
-#include "stdlib.h"
 #include "basic.h"
 #include "weapon.h"
-#include "buff.h"
 
 class Character
 {
@@ -14,11 +9,9 @@ private:
 protected:
   int _attack;
 public:
-  Character(int h,  int a, int mh = -1, bool f = false, bool i = false):
-    _health(h), _attack(a), _max_health(mh),  _frozen(f), _immune(i)
+  Character(int h,  int a, bool f = false, bool i = false):
+    _health(h), _attack(a), _frozen(f), _immune(i)
   {
-    if (_max_health < 0)
-      _max_health = h;
   }
   int health()
   {
@@ -32,7 +25,7 @@ public:
   {
     return _max_health;
   }
-  void maxHealth(int new_max_health)
+  void maxHealth(new_max_health)
   {
     _max_health = new_max_health;
   }
@@ -56,7 +49,7 @@ public:
   {
     return _immune;
   }
-  void immune(int new_immune)
+  void immune(new_immune)
   {
     _immune = new_immune;
   }
@@ -117,6 +110,8 @@ public:
   }
 };
 
+enum Race {none=0, beast, murloc, pirate, dragon, demon, totem};
+
 class Minion: public Character
 {
 private:
@@ -124,16 +119,6 @@ private:
   int _ori_health;
   int _ori_attack;
 public:
-  Minion(Race r, int h, int a, int mh = -1, int oh = -1, int oa = -1):
-    Character(h, a, mh), _race(r), _ori_health(oh), _ori_attack(oa)
-  {
-    if (_ori_health < 0)
-      _ori_health = maxHealth();
-    if (_ori_attack < 0)
-      _ori_attack = attack();
-  }
-  vector<Buff> _buff;
-  void _attack();
+	vector<Buff> _buff;
+	void _attack()
 };
-
-#endif

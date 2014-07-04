@@ -1,8 +1,5 @@
-#ifndef _CLASS_BATTLEFIELD_
-#define _CLASS_BATTLEFIELD_
-
 #include "basic.h"
-#include "character.h"
+#include "character_test.h"
 
 #define SIDE 2
 
@@ -29,7 +26,6 @@ public:
       if (_hero[i] != NULL)
 	delete _hero[i];
   }
-
   void summon_minion(Minion* m, int side, int position = -1)
   {
     if (position < 0 || position > _minion[side].size())
@@ -45,6 +41,7 @@ public:
       delete _minion[side][position];
     _minion[side].erase(_minion[side].begin() + position);
   }
+  /*
   static bool attack(Character *a, Character *b)
   {
     if (!a->canAttack())
@@ -53,6 +50,5 @@ public:
     a->attacking(b);
     b->attacked(a);
     return true;
+  }*/
 };
-
-#endif

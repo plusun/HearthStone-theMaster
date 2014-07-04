@@ -2,7 +2,10 @@
 #define __CARD_H__
 
 #include "basic.h"
-#include "character.h"
+#include "character_test.h"
+#include "cocos2d.h"
+
+USING_NS_CC;
 
 class Card
 {
@@ -21,7 +24,8 @@ public:
   {
     _cost = new_cost;
   }
-  //Sprite *Sprite_handcard;
+
+  Sprite * Sprite_card;
 };
 
 class MinionCard: public Card
