@@ -1,5 +1,5 @@
 #include "basic.h"
-#include "character_test.h"
+#include "character.h"
 
 #define SIDE 2
 

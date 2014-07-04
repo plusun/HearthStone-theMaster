@@ -2,7 +2,7 @@
 #define __PLAYER_H__
 
 #include "basic.h"
-#include "character_test.h"
+#include "character.h"
 #include "mana.h"
 #include "battlefield.h"
 #include "handcard.h"

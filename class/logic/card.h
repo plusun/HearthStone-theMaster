@@ -2,7 +2,7 @@
 #define __CARD_H__
 
 #include "basic.h"
-#include "character_test.h"
+#include "character.h"
 #include "cocos2d.h"
 
 USING_NS_CC;
