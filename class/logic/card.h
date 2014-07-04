@@ -2,7 +2,7 @@
 #define __CARD_H__
 
 #include "basic.h"
-#include "character_test.h"
+#include "character.h"
 
 class Card
 {
@@ -21,7 +21,7 @@ public:
   {
     _cost = new_cost;
   }
-  Sprite *Sprite_handcard;
+  //Sprite *Sprite_handcard;
 };
 
 class MinionCard: public Card

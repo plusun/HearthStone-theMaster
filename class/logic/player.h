@@ -1,8 +1,8 @@
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#ifndef _CLASS_PLAYER_
+#define _CLASS_PLAYER_
 
 #include "basic.h"
-#include "character_test.h"
+#include "character.h"
 #include "mana.h"
 #include "battlefield.h"
 #include "handcard.h"

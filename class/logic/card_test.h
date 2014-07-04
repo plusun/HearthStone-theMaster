@@ -1,5 +1,5 @@
 #include "card.h"
-#include "minion_test.h"
+#include "minion.h"
 
 class Wisp_card : public MinionCard
 {

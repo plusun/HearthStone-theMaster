@@ -1,5 +1,8 @@
+#ifndef _CLASS_BATTLEFIELD_
+#define _CLASS_BATTLEFIELD_
+
 #include "basic.h"
-#include "character_test.h"
+#include "character.h"
 
 #define SIDE 2
 
@@ -53,3 +56,5 @@ public:
     return true;
   }*/
 };
+
+#endif
