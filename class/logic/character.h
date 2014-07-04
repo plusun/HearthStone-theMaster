@@ -5,23 +5,23 @@ class Character
 {
 private:
   bool _frozen, _immune;
-  Value _health, _max_health;
+  int _health, _max_health;
 protected:
-  Value _attack;
+  int _attack;
 public:
-  Character(Value h,  Value a, bool f = false, bool i = false):
+  Character(int h,  int a, bool f = false, bool i = false):
     _health(h), _attack(a), _frozen(f), _immune(i)
   {
   }
-  Value health()
+  int health()
   {
     return _health;
   }
-  void health(Value new_health)
+  void health(int new_health)
   {
     _health = new_health;
   }
-  Value maxHealth()
+  int maxHealth()
   {
     return _max_health;
   }
@@ -29,11 +29,11 @@ public:
   {
     _max_health = new_max_health;
   }
-  virtual Value attack()
+  virtual int attack()
   {
     return _attack;
   }
-  void attack(Value new_attack)
+  void attack(int new_attack)
   {
     _attack = new_attack;
   }
@@ -62,10 +62,10 @@ public:
 class Hero: public Character
 {
 private:
-  Value _armor;
+  int _armor;
   Weapon *_weapon;
 public:
-  Hero(Value h):
+  Hero(int h):
     Character(h, 0)
   {
     _armor = 0;
@@ -77,16 +77,16 @@ public:
       delete _weapon;
   }
 
-  Value armor()
+  int armor()
   {
     return _armor;
   }
-  void armor(Value new_armor)
+  void armor(int new_armor)
   {
     _armor = new_armor;
   }
 
-  Value attack()
+  int attack()
   {
     if (_weapon == NULL)
       return _attack;
@@ -116,8 +116,8 @@ class Minion: public Character
 {
 private:
   Race _race;
-  Value _ori_health;
-  Value _ori_attack;
+  int _ori_health;
+  int _ori_attack;
 public:
 	vector<Buff> _buff;
 	void _attack()

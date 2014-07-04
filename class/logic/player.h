@@ -1,5 +1,5 @@
 #include "basic.h"
-#include "character.h"
+#include "character_test.h"
 #include "mana.h"
 #include "battlefield.h"
 #include "handcard.h"

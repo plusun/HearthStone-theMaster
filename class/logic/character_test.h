@@ -1,13 +1,12 @@
 #include "basic.h"
-#include "weapon.h"
 
 class Character
 {
 public:
-	Value _health, _max_health;
-	Value _attack;
+	int _health, _max_health;
+	int _attack;
 
-  Character(Value h,  Value a,):
+  Character(int h,  int a,):
     _health(h), _attack(a), _max_health(h)
   {
   }
@@ -16,7 +15,7 @@ public:
 class Hero: public Character
 {
 public:
-	Hero(Value h):
+	Hero(int h):
     Character(h, 0)
 	{
 	}
@@ -31,8 +30,8 @@ class Minion: public Character
 {
 public:
 	Race _race;
-	Value _ori_health;
-	Value _ori_attack;
+	int _ori_health;
+	int _ori_attack;
 	void _attack();
 	Minion(){};
 };

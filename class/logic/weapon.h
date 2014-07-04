@@ -3,25 +3,25 @@
 class Weapon
 {
 private:
-  Value _attack, _durable;
+  int _attack, _durable;
 public:
-  Weapon(Value a, Value d):
+  Weapon(int a, int d):
     _attack(a), _durable(d)
   {
   }
-  Value attack()
+  int attack()
   {
     return _attack;
   }
-  void attack(Value new_attack)
+  void attack(int new_attack)
   {
     _attack = new_attack;
   }
-  Value durable()
+  int durable()
   {
     return _durable;
   }
-  void durable(Value new_durable)
+  void durable(int new_durable)
   {
     _durable = new_durable;
   }

@@ -1,20 +1,20 @@
 #include "basic.h"
-#include "character.h"
+#include "character_test.h"
 
 class Card
 {
 private:
-  Value _cost;
+  int _cost;
 public:
-  Card(Value c):
+  Card(int c):
     _cost(c)
   {
   }
-  Value cost()
+  int cost()
   {
     return _cost;
   }
-  void cost(Value new_cost)
+  void cost(int new_cost)
   {
     _cost = new_cost;
   }
@@ -25,7 +25,7 @@ class MinionCard: public Card
 private:
   Minion *_minion;
 public:
-  MinionCard(Value cost, Minion *m):
+  MinionCard(int cost, Minion *m):
     Card(cost), _minion(m)
   {
   }

@@ -1,5 +1,4 @@
-#include "charater.h"
-#include "spell.h"
+#include "charater_test.h"
 
 class Wisp : public Minion
 {

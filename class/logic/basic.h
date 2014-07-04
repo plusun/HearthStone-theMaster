@@ -1,1 +1,3 @@
-typedef int Value;
+#include <vector>
+
+using namespace std;

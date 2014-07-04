@@ -1,8 +1,7 @@
 #include "card.h"
-#include "spell.h"
 #include "minion_test.h"
 
-class Wisp_card : public Minion_card
+class Wisp_card : public MinionCard
 {
 public:
 	Wisp_card(1,NULL);
@@ -14,7 +13,7 @@ Wisp_card::cast()
 
 }
 
-class Murloc_raider_card : public Minion_card
+class Murloc_raider_card : public MinionCard
 {
 public:
 	Murloc_raider(1,NULL);
