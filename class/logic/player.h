@@ -1,11 +1,13 @@
+#ifndef __PLAYER_H__
+#define __PLAYER_H__
+
 #include "basic.h"
 #include "character_test.h"
 #include "mana.h"
 #include "battlefield.h"
 #include "handcard.h"
+#include "deck.h"
 
-
-enum checkpoint {turn_start = 0, summon_minion, want_to_attack, hurt, died, cast_spell, turn_end};
 #define maxhp 30
 
 
@@ -13,18 +15,18 @@ class Sustainable_effect
 {
 public:
 	checkpoint _time;
-	character _targe;
+	Character _targe;
 	void effect();
-}
+};
 
 class Player
 {
 public:
-	Deck _deck;
-	Battlefield _battlefield
+	deck _deck;
+	Battlefield _battlefield;
 	Handcard _handcard;
 	Mana _mana;
-	Secret_slot _secret;
+	//Secret_slot _secret;
 	bool is_host;
 	bool is_first;
 	Player* oppoent;
@@ -32,7 +34,7 @@ public:
 	Player();
 	void init();
 	void turn();
-}
+};
 
 Player::Player()
 {
@@ -54,23 +56,24 @@ void Player::init()
 		for (int i = 0; i < 4; i++)
 			_handcard.draw_card(_deck.give_card());
 	}
-	opponent = receive_from_server();
+	//opponent = receive_from_server();
 };
 
 void Player::turn()
 {
 	//preparation
 	if ( _mana._max_mana < 10 )					//max mana++ & restore mana
-		_mana.inc_max_mana;
-	_mana.retore_mana();
+		_mana.inc_max_mana();
+	_mana.restore_mana();
 
 	//player's choice
 
 
 	//TODO: use card
+
 	{
 
-		_mana.cost_mana(card.cost);
+		//_mana.cost_mana(card.cost);
 		//TODO: summon minion
 		{
 
@@ -102,3 +105,5 @@ void Player::turn()
 	//TODO: click 'end turn' button
 	return;
 }
+
+#endif

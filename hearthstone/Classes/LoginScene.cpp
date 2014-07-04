@@ -66,7 +66,7 @@ void LoginScene::LoginMenuCallback(Object* pSender)
 	CCTransitionScene * reScene = NULL;
 	CCScene * s = GameLayer::createScene();
     float t = 1.2f;
-    reScene = CCTransitionJumpZoom  ::create(t , s);
+    reScene = CCTransitionProgressHorizontal  ::create(t , s);
 	CCDirector::sharedDirector()->replaceScene(reScene);
 }
 

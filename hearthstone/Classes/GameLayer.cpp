@@ -2,6 +2,7 @@
 
 USING_NS_CC;
 
+
 Scene* GameLayer::createScene()
 {
     // 'scene' is an autorelease object
@@ -24,7 +25,6 @@ bool GameLayer::init()
         return false;
     }
 
-	m_iCurMsgIndex=0;
     setTouchEnabled(true);
 
 	CCSize winSize=CCDirector::sharedDirector()->getWinSize();//get window size
@@ -42,14 +42,36 @@ bool GameLayer::init()
 	auto LoginMenuItem=MenuItemImage::create("chupai.png","chupai.png",CC_CALLBACK_1(GameLayer::cardMenuCallback,this));
 	LoginMenuItem->setPosition(Point(winSize.width / 2+390, winSize.height / 2-220));
 	auto starMenu=Menu::create(LoginMenuItem,NULL);
-	starMenu->setPosition(Point::ZERO); //menu锚点默认为（0,0），此时把menu位置也设为(0,0)，所以menu的左下角位于屏幕的左下角
+	starMenu->setPosition(Point::ZERO); 
 	this->addChild(starMenu,1);
 
 	auto exitMenuItem=MenuItemImage::create("huihejieshu.png","huihejieshu.png",CC_CALLBACK_1(GameLayer::endMenuCallback,this));
 	exitMenuItem->setPosition(Point(winSize.width / 2+390, winSize.height / 2-275));
 	auto exitMenu=Menu::create(exitMenuItem,NULL);
-	exitMenu->setPosition(Point::ZERO); //menu锚点默认为（0,0），此时把menu位置也设为(0,0)，所以menu的左下角位于屏幕的左下角
+	exitMenu->setPosition(Point::ZERO); 
 	this->addChild(exitMenu,1);
+  
+
+	/* time progress */
+	CCSprite *s2=CCSprite::create("time2.png");     
+	s2->setPosition(ccp(winSize.width / 2+390, winSize.height / 2-100));    
+	addChild(s2,0);    
+	CCSprite *s=CCSprite::create("time1.png");    
+	CCProgressTimer *pt=CCProgressTimer::create(s);    
+	pt->setPosition(ccp(winSize.width / 2+390, winSize.height / 2-100));    
+	pt->setType(cocos2d::CCProgressTimerType(kCCProgressTimerTypeBar));
+	pt->setBarChangeRate(ccp(1, 0));
+	this->addChild(pt,1);    
+	CCProgressTo *t=CCProgressTo::create(60,100);    
+	pt->runAction(CCRepeatForever::create(t));
+
+	/* time label */
+	CCLabelTTF* pLabel = CCLabelTTF::create("Time", "Arial", 30);//要显示的内容，字体，字号    
+	pLabel->setPosition(ccp(winSize.width / 2+390, winSize.height / 2-150));  
+	this->addChild(pLabel, 1);  
+
+	/*init player*/
+
 
 	this->schedule(schedule_selector(GameLayer::timeCallback), 10.0f);
     return true;
@@ -71,5 +93,5 @@ void GameLayer::endMenuCallback(Object* pSender)
 
 void GameLayer::timeCallback(float ct)
 {
-	 
+
 }

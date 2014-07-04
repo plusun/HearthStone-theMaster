@@ -12,7 +12,7 @@ public:
 
 
 deck::deck()
-	:amount(deck_amount)
+	:_amount(deck_amount)
 {
 	srand(time(0));
 	for (int i = deck_amount -1; i > 0; i--)		//shuffle card

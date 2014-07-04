@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 #include "cocos-ext.h"
-
+#include "logic/player.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT; 
@@ -12,7 +12,7 @@ class GameLayer : public cocos2d::Layer
 {
 public:
 	bool init();
-	GameLayer():m_iCurMsgIndex(0){};
+	
 	static cocos2d::Scene* createScene();
 	CREATE_FUNC(GameLayer);
 
@@ -21,7 +21,7 @@ public:
 	void timeCallback(float ct);
 
 private:
-	int m_iCurMsgIndex;
+	
 
 };
 

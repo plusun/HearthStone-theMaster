@@ -1,3 +1,6 @@
+#ifndef __CARD_H__
+#define __CARD_H__
+
 #include "basic.h"
 #include "character_test.h"
 
@@ -22,9 +25,8 @@ public:
 
 class MinionCard: public Card
 {
-private:
-  Minion *_minion;
 public:
+  Minion *_minion;
   MinionCard(int cost, Minion *m):
     Card(cost), _minion(m)
   {
@@ -43,3 +45,5 @@ public:
     _minion = new_minion;
   }
 };
+
+#endif

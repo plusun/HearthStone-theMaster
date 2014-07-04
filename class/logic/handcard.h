@@ -7,19 +7,21 @@ public:
 	vector<Card> _card;
 	Handcard():amount(0)
 	{
-		_minion.clear();
+		_card.clear();
 	}
 	void draw_card(Card c)
 	{
 		amount++;
 		_card.push_back(c);
 	}
-	Card use card(int position)
+	Card use_card(int position)
 	{
 		for (int i = position; i < amount - 1; i++)
 			_card[i] = _card[i+1];
 		amount--;
-		return _card.pop_back();
+		Card tmp_card = _card.back();
+		_card.pop_back();
+		return tmp_card;
 	}
 
-}
+};

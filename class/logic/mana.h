@@ -3,9 +3,10 @@
 class Mana
 {
 private:
+
+public:
 	int _max_mana;
 	int _cur_mana;
-public:
 	Mana(int mm = 0, int cm = 0):_max_mana(mm),_cur_mana(cm){}
 	int max_mana()
 	{
@@ -15,7 +16,7 @@ public:
 	{
 		return _cur_mana;
 	}
-	void inc_max_mana(int n)
+	void inc_max_mana(int n = 1)
 	{
 		_max_mana += n;
 	}

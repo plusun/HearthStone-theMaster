@@ -1,3 +1,6 @@
+#ifndef __CHARATER_TEST_H__
+#define __CHARATER_TEST_H__
+
 #include "basic.h"
 
 class Character
@@ -5,26 +8,20 @@ class Character
 public:
 	int _health, _max_health;
 	int _attack;
-
-  Character(int h,  int a,):
-    _health(h), _attack(a), _max_health(h)
-  {
-  }
+	Character(){};
 };
 
 class Hero: public Character
 {
 public:
 	Hero(int h):
-    Character(h, 0)
+    Character()
 	{
 	}
 	~Hero()
 	{
 	}
 };
-
-enum Race {none=0, beast, murloc, pirate, dragon, demon, totem};
 
 class Minion: public Character
 {
@@ -35,3 +32,5 @@ public:
 	void _attack();
 	Minion(){};
 };
+
+#endif;
