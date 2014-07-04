@@ -9,11 +9,9 @@ private:
 protected:
   int _attack;
 public:
-  Character(int h,  int a, int m = -1, bool f = false, bool i = false):
-    _health(h), _attack(a), _max_health(m), _frozen(f), _immune(i)
+  Character(int h,  int a, bool f = false, bool i = false):
+    _health(h), _attack(a), _frozen(f), _immune(i)
   {
-    if (_max_health < 0)
-      _max_health = _health;
   }
   int health()
   {
@@ -55,7 +53,7 @@ public:
   {
     _immune = new_immune;
   }
-  virtual bool canAttack()
+  bool canAttack()
   {
     return attack() > 0;
   }
@@ -144,31 +142,7 @@ private:
   Race _race;
   int _ori_health;
   int _ori_attack;
-  int lifespan;
 public:
-  Minion(Race r, int h, int a, int m = -1, int oh = -1, int oa = -1):
-    Character(h, a, m), _race(r), _ori_health(oh), _ori_attack(oa), lifespan(0)
-  {
-    if (_ori_health < 0)
-      _ori_health = maxHealth();
-    if (_ori_attack < 0)
-      _ori_attack = attack();
-  }
-  vector<Buff> _buff;
-  Race race()
-  {
-    return _race;
-  }
-  int originalHealth()
-  {
-    return _ori_health;
-  }
-  int originalAttack()
-  {
-    return _ori_attack();
-  }
-  bool canAttack()
-  {
-    return lifespan > 0 && attack() > 0;
-  }
+	vector<Buff> _buff;
+	void _attack()
 };
