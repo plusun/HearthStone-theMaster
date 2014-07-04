@@ -15,7 +15,7 @@ class Sustainable_effect
 {
 public:
 	checkpoint _time;
-	Character _targe;
+	Character _target;
 	void effect();
 };
 
