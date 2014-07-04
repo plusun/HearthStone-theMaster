@@ -3,6 +3,9 @@
 
 using namespace std;
 
-map<int, Card> mapcard;
-map<int, Minion> mapminion;
+Minion* transform(int)
+{
+	Minion* tmp;
 
+
+}

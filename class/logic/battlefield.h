@@ -15,7 +15,7 @@ public:
   }
   ~Battlefield()
   {
-    for (vector<Mionion *>::iterator itr = _minion.begin();
+    for (vector<Minion *>::iterator itr = _minion.begin();
 	 itr != _minion.end();
 	 ++itr)
       if (*itr != NULL)
@@ -26,7 +26,7 @@ public:
       if (*itr != NULL)
 	delete *itr;
   }
-  void summon_minion(minion* m, int position = -1,)
+  void summon_minion(Minion* m, int position = -1,)
   {
     if (position < 0 || position > _minion.size())
       _minion.push_back(m);
