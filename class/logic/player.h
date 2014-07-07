@@ -29,7 +29,7 @@ public:
   //Secret_slot _secret;
   bool is_first;
 public:
-  Player();
+  Player(deck *d, Battlefield *b, bool f = true);
   void init();
   void turn();
   bool use(int);

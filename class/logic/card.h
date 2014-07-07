@@ -4,8 +4,11 @@
 #include "basic.h"
 #include "character.h"
 #include "cocos2d.h"
+#include <map>
 
 USING_NS_CC;
+
+#define MAXCARDNO 500
 
 enum CardType { MINION };
 
@@ -53,7 +56,7 @@ public:
     _minion = new_minion;
   }
 };
-
+extern std::map<int, Card *> cardPool;
 Card *NumberToCard(int no);
 
 #endif

@@ -23,6 +23,8 @@ public:
   bool immune();
   void immune(int new_immune);
   bool canAttack();
+  virtual void attacking(Character *c);
+  virtual void attacked(Character *c);
 };
 
 class Hero: public Character
@@ -38,6 +40,8 @@ public:
   int attack();
   Weapon *weapon();
   void weapon(Weapon *new_weapon);
+  void attacking(Character *);
+  void destroyWeapon();
 };
 
 class Minion: public Character

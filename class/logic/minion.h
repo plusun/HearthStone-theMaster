@@ -1,10 +1,11 @@
-#include "charater.h"
+#include "character.h"
 #include "spell.h"
 
 class Wisp : public Minion
 {
 public:
-  Wisp():_race(none),_ori_attack(1),_attack(1),_ori_health(1),_max_health(1),_health(1){battlecry()};
+  Wisp(): Minion(none, 1, 1)
+	  {battlecry();}
   void battlecry(){};
   void effect(){};
   void deathrattle(){};

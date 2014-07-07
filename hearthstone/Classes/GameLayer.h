@@ -12,6 +12,16 @@ class GameLayer : public cocos2d::Layer
 {
 public:
 	bool init();
+	GameLayer():
+		b(new Battlefield()),
+		d1(new deck()),
+		d2(new deck()),
+		player1(d1, b, true),
+		player2(d2, b, false)
+	{
+	}
+	Battlefield *b;
+	deck *d1, *d2;
 	Player player1;
 	Player player2;
 	

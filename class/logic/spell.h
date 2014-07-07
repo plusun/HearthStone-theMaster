@@ -1,10 +1,10 @@
 #include "basic.h"
 
-target enum{ally,all_ally,enemy,all_enemy};
+enum target{ally,all_ally,enemy,all_enemy};
 
 class Spell
 {
-	void cast() = 0;
+   virtual void cast() = 0;
 };
 
 class Single_spell : public Spell
@@ -35,7 +35,7 @@ class Two_target_spell : public Spell
 	void effect();
 };
 
-class Imm-use_spell : public Spell
+class Imm_use_spell : public Spell
 {
 	vector<Character> _target;			//should be cal in cast()
 };

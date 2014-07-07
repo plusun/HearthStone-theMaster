@@ -1,12 +1,12 @@
 #include "player.h"
 
 
-Player::Player(deck *d, Battlefield *b, bool f = true):
+Player::Player(deck *d, Battlefield *b, bool f ):
   _deck(d), _battlefield(b), is_first(f)
 {
 }
 
-bool draw()
+bool Player::draw()
 {
   int n = _deck->give_card();
   if (!_handcard.full())
@@ -22,7 +22,7 @@ void Player::init()					//game start init
   if (is_first)
     {
       for (int i = 0; i < 3; i++)
-	draw();
+	  draw();
       _mana.inc_max_mana(1);
       _mana.inc_cur_mana(1);
     }
@@ -49,10 +49,11 @@ bool Player::use(int i)
     return false;
   Card *card = _handcard.use_card(i);
   _mana.cost_mana(card->cost());
+  MinionCard *c = NULL;
   switch (card->_type)
     {
     case MINION:
-      MinionCard *c = (MinionCard *)card;
+      c = (MinionCard *)card;
       _battlefield->summon_minion(c->minion());
       break;
     default:
@@ -61,7 +62,7 @@ bool Player::use(int i)
   return true;
 }
 
-bool attack(int self, int other)
+bool Player::attack(int self, int other)
 {
   Character *a, *b;
   if (self < 0)

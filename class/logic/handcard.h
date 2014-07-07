@@ -9,7 +9,7 @@ class Handcard
 {
 public:
   vector<int> _card;
-  Handcard():amount(0)
+  Handcard()
   {
     _card.clear();
   }
