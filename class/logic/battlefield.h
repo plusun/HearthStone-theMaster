@@ -2,6 +2,7 @@
 #include "character.h"
 
 #define SIDE 2
+#define MAXMINION 10
 
 class Battlefield
 {
@@ -26,12 +27,15 @@ public:
       if (_hero[i] != NULL)
 	delete _hero[i];
   }
-  void summon_minion(Minion* m, int side = 0, int position = -1)
+  bool summon_minion(Minion* m, int side = 0, int position = -1)
   {
+    if (_minion[side].size() > MAXMINION)
+      return false;
     if (position < 0 || position > _minion[side].size())
       _minion[side].push_back(m);
     else
       _minion[side].insert(_minion[side].begin() + position,m);
+    return true;
   }
   void destroy_minion(int side, int position)
   {
