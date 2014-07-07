@@ -26,7 +26,7 @@ public:
       if (_hero[i] != NULL)
 	delete _hero[i];
   }
-  void summon_minion(Minion* m, int side, int position = -1)
+  void summon_minion(Minion* m, int side = 0, int position = -1)
   {
     if (position < 0 || position > _minion[side].size())
       _minion[side].push_back(m);
@@ -41,7 +41,6 @@ public:
       delete _minion[side][position];
     _minion[side].erase(_minion[side].begin() + position);
   }
-  /*
   static bool attack(Character *a, Character *b)
   {
     if (!a->canAttack())
@@ -50,5 +49,5 @@ public:
     a->attacking(b);
     b->attacked(a);
     return true;
-  }*/
+  }
 };

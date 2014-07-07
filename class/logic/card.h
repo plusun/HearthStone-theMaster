@@ -7,13 +7,16 @@
 
 USING_NS_CC;
 
+enum CardType { MINION };
+
 class Card
 {
 private:
   int _cost;
 public:
-  Card(int c):
-    _cost(c)
+  CardType _type;
+  Card(int c, CardType t = MINION):
+    _cost(c), _type(t)
   {
   }
   int cost()
@@ -50,5 +53,7 @@ public:
     _minion = new_minion;
   }
 };
+
+Card *NumberToCard(int no);
 
 #endif

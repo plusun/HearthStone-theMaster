@@ -14,27 +14,27 @@
 class Sustainable_effect
 {
 public:
-	checkpoint _time;
-	Character _targe;
-	void effect();
+  checkpoint _time;
+  Character _targe;
+  void effect();
 };
 
 class Player
 {
 public:
-	deck _deck;
-	Battlefield _battlefield;
-	Handcard _handcard;
-	Mana _mana;
-	//Secret_slot _secret;
-	bool is_host;
-	bool is_first;
-	Player* oppoent;
+  deck *_deck;
+  Battlefield *_battlefield;
+  Handcard _handcard;
+  Mana _mana;
+  //Secret_slot _secret;
+  bool is_first;
 public:
-	Player();
-
-	void init();
-	void turn();
+  Player();
+  void init();
+  void turn();
+  void use(int);
+  // return false if too many handcards
+  bool draw();
 };
 
 

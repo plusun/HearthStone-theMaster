@@ -7,11 +7,11 @@
 
 class deck
 {
-	int _amount;
-	int _card[deck_amount];
+  int _amount;
+  int _card[deck_amount];
 public:
-	deck();
-	int give_card();
+  deck();
+  int give_card();
 };
 
 
