@@ -33,7 +33,7 @@ public:
     else
       _minion[side].insert(_minion[side].begin() + position,m);
   }
-  void destroy_minion(int position,int side)
+  void destroy_minion(int side, int position)
   {
     if (position < 0 || position >= _minion[side].size())
       return;
@@ -49,5 +49,12 @@ public:
     a->attacking(b);
     b->attacked(a);
     return true;
+  }
+  void checkAndDead()
+  {
+    for (int side = 0; side < SIDE; ++side)
+      for (int i = 0; i < _minion.size(); ++i)
+	if (_minion[side][i]->health() <= 0)
+	  destroy_minion(side, i);
   }
 };

@@ -32,9 +32,10 @@ public:
   Player();
   void init();
   void turn();
-  void use(int);
+  bool use(int);
   // return false if too many handcards
   bool draw();
+  bool attack(int self, int other);
 };
 
 

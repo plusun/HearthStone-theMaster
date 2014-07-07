@@ -17,6 +17,13 @@ public:
   {
     _card.push_back(c);
   }
+  int getCost(int position)
+  {
+    Card *card = NumberToCard(_card[position]);
+    int ret = card->cost();
+    delete card;
+    return ret;
+  }
   Card *use_card(int position)
   {
     int tmp = _card[position];

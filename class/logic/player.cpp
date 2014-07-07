@@ -43,9 +43,12 @@ void Player::turn()
 }
 
 // use ith handcard
-void Player::use(int i)
+bool Player::use(int i)
 {
+  if (_handcard.getCost(i) > _mana.cur_mana())
+    return false;
   Card *card = _handcard.use_card(i);
+  _mana.cost_mana(card->cost());
   switch (card->_type)
     {
     case MINION:
@@ -55,4 +58,22 @@ void Player::use(int i)
     default:
       break;
     }
+  return true;
+}
+
+bool attack(int self, int other)
+{
+  Character *a, *b;
+  if (self < 0)
+    a = _battlefield->_hero[0];
+  else
+    a = _battlefield->_minion[0][self];
+  if (other < 0)
+    b = _battlefield->_hero[1];
+  else
+    b = _battlefield->_minion[1][other];
+  if (!_battlefield->attack(a, b))
+    return false;
+  _battlefield->checkAndDead();
+  return true;
 }
