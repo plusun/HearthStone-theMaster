@@ -61,7 +61,10 @@ public:
   void startSide(int side)
   {
     for (int i = 0; i < _minion[side].size(); ++i)
-      _minion[size][i]->deFrozen();
+      {
+	_minion[size][i]->deFrozen();
+	_minion[size][i]->newMinion(false);
+      }
   }
   void overSide(int side)
   {
