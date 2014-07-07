@@ -48,6 +48,7 @@ public:
 
     a->attacking(b);
     b->attacked(a);
+    a->tired(true);
     return true;
   }
   void checkAndDead()
@@ -56,5 +57,15 @@ public:
       for (int i = 0; i < _minion[side].size(); ++i)
 	if (_minion[side][i]->health() <= 0)
 	  destroy_minion(side, i);
+  }
+  void startSide(int side)
+  {
+    for (int i = 0; i < _minion[side].size(); ++i)
+      _minion[size][i]->deFrozen();
+  }
+  void overSide(int side)
+  {
+    for (int i = 0; i < _minion[side].size(); ++i)
+      _minion[size][i]->tired(false);
   }
 };

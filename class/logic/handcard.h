@@ -26,6 +26,8 @@ public:
   }
   Card *use_card(int position)
   {
+    if (position >= _card.size())
+      return NULL;
     int tmp = _card[position];
     _card.erase(_card.begin() + position);
     return NumberToCard(tmp);

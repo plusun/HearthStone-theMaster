@@ -35,11 +35,17 @@ void Player::init()					//game start init
 
 void Player::turn()
 {
+  _battlefield->startSide(side);
   //preparation
   if ( _mana._max_mana < 10 ) //max mana++ & restore mana
     _mana.inc_max_mana();
   _mana.restore_mana();
   draw();
+}
+
+void Player::over()
+{
+  _battlefield->overSide(side);
 }
 
 // use ith handcard
@@ -48,6 +54,8 @@ bool Player::use(int i)
   if (_handcard.getCost(i) > _mana.cur_mana())
     return false;
   Card *card = _handcard.use_card(i);
+  if (card == NULL)
+    return false;
   _mana.cost_mana(card->cost());
   MinionCard *c = NULL;
   switch (card->_type)
@@ -59,20 +67,23 @@ bool Player::use(int i)
     default:
       break;
     }
+  _battlefield->checkAndDead();
   return true;
 }
 
-bool Player::attack(int self, int other)
+bool Player::attack(int self, int whichSide, int other)
 {
+  if (whichSide == side)
+    return false;
   Character *a, *b;
   if (self < 0)
-    a = _battlefield->_hero[0];
+    a = _battlefield->_hero[side];
   else
-    a = _battlefield->_minion[0][self];
+    a = _battlefield->_minion[side][self];
   if (other < 0)
-    b = _battlefield->_hero[1];
+    b = _battlefield->_hero[whichSide];
   else
-    b = _battlefield->_minion[1][other];
+    b = _battlefield->_minion[whichSide][other];
   if (!_battlefield->attack(a, b))
     return false;
   _battlefield->checkAndDead();

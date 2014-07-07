@@ -6,8 +6,8 @@
 class Character
 {
 private:
-  bool _frozen, _immune;
-  int _health, _max_health;
+  bool _immune, _tired;
+  int _health, _max_health, _frozen;
 protected:
   int _attack;
 public:
@@ -20,9 +20,10 @@ public:
   void attack(int new_attack);
   bool frozen();
   void frozen(bool new_frozen);
+  void deFrozen();
   bool immune();
   void immune(int new_immune);
-  bool canAttack();
+  virtual bool canAttack();
   virtual void attacking(Character *c);
   virtual void attacked(Character *c);
 };
@@ -50,8 +51,16 @@ private:
   Race _race;
   int _ori_health;
   int _ori_attack;
+  bool _new_minion;
 public:
-  Minion(Race r, int h, int a, int mh = -1, int oh = -1, int oa = -1);
+  Minion(Race r, int h, int a, int mh = -1, int oh = -1, int oa = -1, bool nm = true);
+  int originalHealth();
+  void originalHealth(int);
+  int originalAttack();
+  void originalAttack(int);
+  bool newMinion();
+  void newMinion(bool);
+  bool canAttack();
 };
 
 #endif
