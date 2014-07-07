@@ -16,6 +16,7 @@ public:
 
   void play()
   {
+    pl->turn();
     while (pl->use(0))
       ;
     int anotherSide;
@@ -27,6 +28,7 @@ public:
 	}
     for (int i = -1; i < pl->_battlefield->_minion.size(); ++i)
       pl->attack(i, anotherSide, -1);
+    pl->over();
   }
   
 };
