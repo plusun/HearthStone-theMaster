@@ -33,10 +33,14 @@ printf("%s\n", recvBuf);
 
 
 message = (char*) malloc(sizeof(char)*100);
+while(1)
+{
 scanf("%s",message);
 send(sockClient, message, strlen(message) + 1, 0); // ¹Ø±Õsocket
 printf("send: %s\n", message);
-
+if(message[0] == '3')
+	break;
+}
 recv(sockClient, recvBuf, 100, 0);
 printf("received: %s\n",recvBuf);
 if(recvBuf[2] == '1')

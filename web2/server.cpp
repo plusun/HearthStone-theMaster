@@ -71,7 +71,6 @@ send(sockClient2, sendBuf, strlen(sendBuf) + 1, 0);
 		printf("%s\n",recvBuf2);
 		a = recvBuf1[0];
 		b = recvBuf2[0];
-		printf("%d,%d\n",a,b);
 		if(a == b  && b == '3')
 		{
 			sprintf(recvBuf1, "7/1/");
@@ -86,7 +85,6 @@ while (1)
 {
 	while(1)
 	{
-		printf("**\n");
 		recv(sockClient1, recvBuf1, 100, 0);
 			printf("rec:%s\n",recvBuf1);
 		if(recvBuf1[0] == '6')
