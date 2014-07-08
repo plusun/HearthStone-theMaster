@@ -53,17 +53,24 @@ while(1)
 			exit(0);
 	}
 
+
 	while(1)
 	{
-	recv(sockClient, recvBuf, 100, 0);
+	if(recv(sockClient, recvBuf, 100, 0)<0 || recvBuf[0]< '1' || recvBuf[0] > '7')
+		continue;
+	//else if(recv(sockClient, recvBuf, 100, 0)==0)
+	//{
+	//	exit(0);
+	//}
+	else
+		printf("%s\n", recvBuf);
 	if(recvBuf[0] == '4')
+	{
 	break;
+	}
 	if(recvBuf[0] == '6')
 		exit(0);
 	}
-	 
-recv(sockClient, recvBuf, 100, 0);
-printf("%s\n", recvBuf);
 }
 }
 else if(recvBuf[2] == '0')
@@ -72,9 +79,12 @@ while(1)
 {
 	while(1)
 	{
-	printf("%s\n", recvBuf);
-	if(recv(sockClient, recvBuf, 100, 0)<0)
+	if(recv(sockClient, recvBuf, 100, 0)<0 || recvBuf[0]< '1' || recvBuf[0] > '7')
 		continue;
+	//else if(recv(sockClient, recvBuf, 100, 0)==0)
+	//{
+	//	exit(0);
+	//}
 	else
 		printf("%s\n", recvBuf);
 	if(recvBuf[0] == '4')
@@ -95,8 +105,8 @@ while(1)
 			exit(0);
 	}
 
-recv(sockClient, recvBuf, 100, 0);
-printf("%s\n", recvBuf);
+//recv(sockClient, recvBuf, 100, 0);
+//printf("%s\n", recvBuf);
 }
 }
 

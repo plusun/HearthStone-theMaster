@@ -64,7 +64,7 @@ send(sockClient2, sendBuf, strlen(sendBuf) + 1, 0);
 
 	while (1)
 	{
-		int a ,b;
+		char a ,b;
 		recv(sockClient1, recvBuf1, 100, 0);
 		printf("%s\n",recvBuf1);
 		recv(sockClient2, recvBuf2, 100, 0);
@@ -89,19 +89,19 @@ while (1)
 		printf("**\n");
 		recv(sockClient1, recvBuf1, 100, 0);
 			printf("rec:%s\n",recvBuf1);
-		if(recvBuf1[0] == 6)
+		if(recvBuf1[0] == '6')
 		{
 			send(sockClient2, recvBuf1, strlen(recvBuf1) + 1, 0);
 			closesocket(sockClient1);
 			closesocket(sockClient2);
 			exit(0);
 		}
-		else if(recvBuf1[0] == 1 || recvBuf1[0] == 2 ||recvBuf1[0] == 5)
+		else if(recvBuf1[0] == '1' | recvBuf1[0] == '2' ||recvBuf1[0] == '5')
 		{
         send(sockClient2, recvBuf1, strlen(recvBuf1) + 1, 0);
 				printf("%s\n",recvBuf1);
 		}
-		else if(recvBuf1[0] == 4)
+		else if(recvBuf1[0] == '4')
 		{
 		send(sockClient2, recvBuf1, strlen(recvBuf1) + 1, 0);
 		break;
@@ -111,18 +111,18 @@ while (1)
 	while(1)
 	{
 		recv(sockClient2, recvBuf2, 100, 0);
-		if(recvBuf2[0] == 6)
+		if(recvBuf2[0] == '6')
 		{
 			send(sockClient1, recvBuf2, strlen(recvBuf2) + 1, 0);
 			closesocket(sockClient1);
 			closesocket(sockClient2);
 			exit(0);
 		}
-		else if(recvBuf2[0] == 1 || recvBuf2[0] == 2 ||recvBuf2[0] == 5)
+		else if(recvBuf2[0] == '1' || recvBuf2[0] == '2' ||recvBuf2[0] == '5')
 		{
         send(sockClient1, recvBuf2, strlen(recvBuf2) + 1, 0);
 		}
-		else if(recvBuf2[0] == 4)
+		else if(recvBuf2[0] == '4')
 		{
 		send(sockClient1, recvBuf2, strlen(recvBuf2) + 1, 0);
 		break;
