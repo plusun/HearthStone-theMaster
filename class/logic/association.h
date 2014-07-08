@@ -18,4 +18,6 @@ Card* ntoc(int n)
 	case 8: tmp = new Boulderfist_ogre_card; break;
 	case 9: tmp = new Core_hound_card; break;
 	case 10: tmp = new War_golem_card; break;
+	}
+	return tmp;
 }
