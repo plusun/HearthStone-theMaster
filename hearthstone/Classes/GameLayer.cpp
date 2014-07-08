@@ -2,6 +2,7 @@
 
 USING_NS_CC;
 
+#define MAXCARD 5
 
 Scene* GameLayer::createScene()
 {
@@ -50,17 +51,17 @@ bool GameLayer::init()
 	pt->runAction(CCRepeatForever::create(t));
 
 	/* button */
-	auto LoginMenuItem=MenuItemImage::create("chupai.png","chupai.png",CC_CALLBACK_1(GameLayer::cardMenuCallback,this));
-	LoginMenuItem->setPosition(Point(winSize.width / 2+390, winSize.height / 2-220));
-	auto starMenu=Menu::create(LoginMenuItem,NULL);
-	starMenu->setPosition(Point::ZERO); 
-	this->addChild(starMenu,1);
+	auto cardMenuItem=MenuItemImage::create("chupai.png","chupai.png",CC_CALLBACK_1(GameLayer::cardMenuCallback, this, &player1));
+	cardMenuItem->setPosition(Point(winSize.width / 2+390, winSize.height / 2-220));
+	auto cardMenu=Menu::create(cardMenuItem,NULL);
+	cardMenu->setPosition(Point::ZERO); 
+	this->addChild(cardMenu,1);
 
-	auto exitMenuItem=MenuItemImage::create("huihejieshu.png","huihejieshu.png",CC_CALLBACK_1(GameLayer::endMenuCallback,this));
-	exitMenuItem->setPosition(Point(winSize.width / 2+390, winSize.height / 2-275));
-	auto exitMenu=Menu::create(exitMenuItem,NULL);
-	exitMenu->setPosition(Point::ZERO); 
-	this->addChild(exitMenu,1);
+	auto endMenuItem=MenuItemImage::create("huihejieshu.png","huihejieshu.png",CC_CALLBACK_1(GameLayer::endMenuCallback, this));
+	endMenuItem->setPosition(Point(winSize.width / 2+390, winSize.height / 2-275));
+	auto endMenu=Menu::create(endMenuItem,NULL);
+	endMenu->setPosition(Point::ZERO); 
+	this->addChild(endMenu,1);
   
 
 	/* time label */
@@ -70,8 +71,10 @@ bool GameLayer::init()
 
 	/*init player*/
 	player1.init();
+	static int operator_position = 0;
 	/*draw card*/
 
+	player1.draw();
 	for(int i = 0 ; i < player1._handcard._card.size(); i++)
 	{
 		NumberToCard(player1._handcard._card[i])->Sprite_card = Sprite::create("218.png");
@@ -79,13 +82,22 @@ bool GameLayer::init()
 		this->addChild(NumberToCard(player1._handcard._card[i])->Sprite_card);
 	}
 	
-	card_move(player1);
+	auto dispatcher = Director::getInstance()->getEventDispatcher();
+	auto touchListener = EventListenerTouchOneByOne::create();
+	touchListener->setSwallowTouches(false);
+	touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this,&operator_position);
+	touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this, &player1 , &operator_position);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, NumberToCard(player1._handcard._card[0])->Sprite_card);
+	for(int i = 1 ; i < player1._handcard._card.size() ;i++)
+		_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener->clone(), NumberToCard(player1._handcard._card[i])->Sprite_card);
+	
     return true;
 
 }
 
 /* 每回合出牌后调用的回调函数*/
-void GameLayer::cardMenuCallback(Object* pSender)
+void GameLayer::cardMenuCallback(Object* pSender, Player * player1)
 {
 
 }
@@ -94,7 +106,7 @@ void GameLayer::cardMenuCallback(Object* pSender)
 /* 每回合结束回合后调用的回调函数*/
 void GameLayer::endMenuCallback(Object* pSender)
 {
-	  
+
 }
 
 void GameLayer::timeCallback(float ct)
@@ -102,65 +114,109 @@ void GameLayer::timeCallback(float ct)
 
 }
 
-void GameLayer::card_move(Player &player1)
+
+
+ bool GameLayer:: onTouchBegan(Touch *touch, Event *event , int* postion)
 {
-	auto listener1 = EventListenerTouchOneByOne::create();//创建一个触摸监听
-	listener1->setSwallowTouches(true); //设置是否想下传递触摸
-	
- 
-	//通过 lambda 表达式 直接实现触摸事件的回掉方法
-	listener1->onTouchBegan = [](Touch* touch, Event* event)
-	{
-		auto target = static_cast<Sprite*>(event->getCurrentTarget());
+	auto target = static_cast<Sprite*>(event->getCurrentTarget());
 		Point locationInNode = target->convertToNodeSpace(touch->getLocation());
 		Size s = target->getContentSize();
 		Rect rect = Rect(0, 0, s.width, s.height);
-    
-		if (rect.containsPoint(locationInNode))
+		if(touch->getLocation().y < 140)
 		{
-			target->setOpacity(180);
-			return true;
+			if(((int) touch->getLocation().x % 100) > 60 || ( ( (int)(touch->getLocation()).x % 100 ) <40 ))
+			{
+				int tmp = ( touch->getLocation().x - 40 ) / 100;
+				*postion = 1;
+			}
+			if (rect.containsPoint(locationInNode))
+			{
+				target->setOpacity(180);
+				return true;
+			}
 		}
 		return false;
-	};
- 
-	listener1->onTouchMoved = [](Touch* touch, Event* event)
-	{
+};
+
+void  GameLayer:: onTouchMoved(Touch *touch, Event *event)
+{
 		auto target = static_cast<Sprite*>(event->getCurrentTarget());
 		target->setPosition(target->getPosition() + touch->getDelta());
-	};
- 
-	listener1->onTouchEnded = [=](Touch* touch, Event* event)
-	{
+}; 
+
+void GameLayer:: onTouchEnded(Touch *touch, Event *event , Player * player1, int* operator_position )
+{
 		auto target = static_cast<Sprite*>(event->getCurrentTarget());
 		Point locationInNode = touch->getLocation();
+
 		Rect rect1 = Rect(60,140,90,128);
+		Rect rect2 = Rect(160,140,90,128);
+		Rect rect3 = Rect(260,140,90,128);
+		Rect rect4 = Rect(360,140,90,128);
+		Rect rect5 = Rect(460,140,90,128);
+		Rect rect6 = Rect(560,140,90,128);
+
+		/*get the operator position */
+
 		if (rect1.containsPoint(locationInNode))
 		{
 			target->setOpacity(255);
 			target->setPosition(60+45,140+64);
+			if(NumberToCard(player1->_handcard._card[*operator_position])->_type ==  MINION)
+			{
+				player1->use(*operator_position);
+			}
+		}
+		else if(rect2.containsPoint(locationInNode))
+		{
+			target->setOpacity(255);
+			target->setPosition(160+45,140+64);
+			if(NumberToCard(player1->_handcard._card[*operator_position])->_type ==  MINION)
+			{
+				player1->use(*operator_position);
+			}
+		}
+		else if(rect3.containsPoint(locationInNode))
+		{
+			target->setOpacity(255);
+			target->setPosition(260+45,140+64);
+			if(NumberToCard(player1->_handcard._card[*operator_position])->_type ==  MINION)
+			{
+				player1->use(*operator_position);
+			}
+		}
+		else if(rect4.containsPoint(locationInNode))
+		{
+			target->setOpacity(255);
+			target->setPosition(360+45,140+64);
+			if(NumberToCard(player1->_handcard._card[*operator_position])->_type ==  MINION)
+			{
+				player1->use(*operator_position);
+			}
+		}
+		else if(rect5.containsPoint(locationInNode))
+		{
+			target->setOpacity(255);
+			target->setPosition(460+45,140+64);
+			if(NumberToCard(player1->_handcard._card[*operator_position])->_type ==  MINION)
+			{
+				player1->use(*operator_position);
+			}
+		}
+		else if(rect6.containsPoint(locationInNode))
+		{
+			target->setOpacity(255);
+			target->setPosition(560+45,140+64);
+			if(NumberToCard(player1->_handcard._card[*operator_position])->_type ==  MINION)
+			{
+				player1->use(*operator_position);
+			}
 		}
 		else
 		{
-			target->setPosition(Point(100 + 100 *  player1._handcard._card.size() , 640 / 2-260));
+			target->setPosition(Point(100 + 100 *  player1->_handcard._card.size() , 640 / 2-260));
 		}
-	};
- 
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener1, NumberToCard(player1._handcard._card[1])->Sprite_card);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener1->clone(), NumberToCard(player1._handcard._card[2])->Sprite_card);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener1->clone(), NumberToCard(player1._handcard._card[0])->Sprite_card);
 
-}
 
- bool GameLayer:: onTouchBegan(Touch *touch, Event *unused_event)
-{
-	AllocConsole(); freopen("CONIN$", "r", stdin);
- freopen("CONOUT$", "w", stdout); freopen("CONOUT$", "w", stderr);
-	 CCLOG("touch menu");  
-        return true; 
-};
-void GameLayer:: onTouchMoved(Touch *touch, Event *unused_event)
-{
 }; 
-void GameLayer:: onTouchEnded(Touch *touch, Event *unused_event){}; 
 void GameLayer:: onTouchCancelled(Touch *touch, Event *unused_event){};

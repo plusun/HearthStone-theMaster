@@ -21,6 +21,8 @@ public:
   bool frozen();
   void frozen(bool new_frozen);
   void deFrozen();
+  void tired(bool);
+  bool tired();
   bool immune();
   void immune(int new_immune);
   virtual bool canAttack();

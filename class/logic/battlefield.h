@@ -66,13 +66,13 @@ public:
   {
     for (int i = 0; i < _minion[side].size(); ++i)
       {
-	_minion[size][i]->deFrozen();
-	_minion[size][i]->newMinion(false);
+	_minion[side][i]->deFrozen();
+	_minion[side][i]->newMinion(false);
       }
   }
   void overSide(int side)
   {
     for (int i = 0; i < _minion[side].size(); ++i)
-      _minion[size][i]->tired(false);
+      _minion[side][i]->tired(false);
   }
 };
