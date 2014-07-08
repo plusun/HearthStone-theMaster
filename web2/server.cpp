@@ -65,9 +65,11 @@ send(sockClient2, sendBuf, strlen(sendBuf) + 1, 0);
 	while (1)
 	{
 		char a ,b;
-		recv(sockClient1, recvBuf1, 100, 0);
+		if(recv(sockClient1, recvBuf1, 100, 0)<=0)
+			continue;
 		printf("%s\n",recvBuf1);
-		recv(sockClient2, recvBuf2, 100, 0);
+		if(recv(sockClient2, recvBuf2, 100, 0)<=0)
+			continue;
 		printf("%s\n",recvBuf2);
 		a = recvBuf1[0];
 		b = recvBuf2[0];
@@ -85,7 +87,8 @@ while (1)
 {
 	while(1)
 	{
-		recv(sockClient1, recvBuf1, 100, 0);
+		if(recv(sockClient1, recvBuf1, 100, 0)<=0)
+			continue;
 			printf("rec:%s\n",recvBuf1);
 		if(recvBuf1[0] == '6')
 		{
@@ -108,7 +111,8 @@ while (1)
 
 	while(1)
 	{
-		recv(sockClient2, recvBuf2, 100, 0);
+		if(recv(sockClient2, recvBuf2, 100, 0)<=0)
+			continue;
 		if(recvBuf2[0] == '6')
 		{
 			send(sockClient1, recvBuf2, strlen(recvBuf2) + 1, 0);

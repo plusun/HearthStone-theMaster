@@ -27,7 +27,7 @@ addrServer.sin_family = AF_INET; // 协议类型是INET
 addrServer.sin_port = htons(6000); // 连接端口6000
 // 让 sockClient 连接到 服务端
 connect(sockClient, (SOCKADDR *)&addrServer, sizeof(SOCKADDR)); // 从服务端获取数据
-recv(sockClient, recvBuf, 100, 0); // 打印数据
+if(recv(sockClient, recvBuf, 100, 0)>0) // 打印数据
 printf("%s\n", recvBuf); 
 //message = "hello world"; // 发送数据到服务端
 
@@ -38,11 +38,13 @@ while(1)
 scanf("%s",message);
 send(sockClient, message, strlen(message) + 1, 0); // 关闭socket
 printf("send: %s\n", message);
-if(message[0] == '3')
+
+if(message[0] == '3' && recv(sockClient, recvBuf, 100, 0)>0)
 	break;
 }
-recv(sockClient, recvBuf, 100, 0);
+
 printf("received: %s\n",recvBuf);
+
 if(recvBuf[2] == '1')
 {
 while(1)
