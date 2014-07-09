@@ -3,15 +3,10 @@
 #pragma comment(lib, "ws2_32.lib")
 #include <stdlib.h>
 #include <windows.h> 
-#include <iostream>
-#include <fstream>
-using namespace std;
     
 
 int main()
 {
-	char filename[] = "record.txt"; // 此处写入文件名 
-
 	int err; // 错误信息
 	int len;
 	char sendBuf[100]; // 发送至客户端的字符串
@@ -57,8 +52,6 @@ int main()
 	printf("服务器已启动:\n监听中...\n");
 	len = sizeof(SOCKADDR);
 
-	ofstream fout(filename);
-
 	while (1)
 	{
 		// accept 会阻塞进程，直到有客户端连接上来为止
@@ -74,12 +67,10 @@ int main()
 				char a ,b;
 				if(recv(sockClient1, recvBuf1, 100, 0)<=0)
 					continue;
-				printf("C1:%s\n",recvBuf1);
-				fout<<"C1:"<<recvBuf1<<"\n";
+				printf("%s\n",recvBuf1);
 				if(recv(sockClient2, recvBuf2, 100, 0)<=0)
 					continue;
-				printf("C2:%s\n",recvBuf2);
-				fout<<"C2:"<<recvBuf1<<"\n";
+				printf("%s\n",recvBuf2);
 				a = recvBuf1[0];
 				b = recvBuf2[0];
 				if(a == b  && b == '3')
@@ -98,8 +89,7 @@ int main()
 			{
 				if(recv(sockClient1, recvBuf1, 100, 0)<=0)
 					continue;
-					printf("C1:%s\n",recvBuf1);
-					fout<<"C1:"<<recvBuf1<<"\n";
+					printf("rec:%s\n",recvBuf1);
 				if(recvBuf1[0] == '6')
 				{
 					send(sockClient2, recvBuf1, strlen(recvBuf1) + 1, 0);
@@ -107,9 +97,10 @@ int main()
 					closesocket(sockClient2);
 					return 0;
 				}
-				else if(recvBuf1[0] == '1' || recvBuf1[0] == '2' ||recvBuf1[0] == '5' ||recvBuf1[0] == '8')
+				else if(recvBuf1[0] == '1' || recvBuf1[0] == '2' ||recvBuf1[0] == '5')
 				{
 					send(sockClient2, recvBuf1, strlen(recvBuf1) + 1, 0);
+					printf("%s\n",recvBuf1);
 				}
 				else if(recvBuf1[0] == '4')
 				{
@@ -122,8 +113,6 @@ int main()
 			{
 				if(recv(sockClient2, recvBuf2, 100, 0)<=0)
 					continue;
-				printf("C2:%s\n",recvBuf2);
-				fout<<"C2:"<<recvBuf2<<"\n";
 				if(recvBuf2[0] == '6')
 				{
 					send(sockClient1, recvBuf2, strlen(recvBuf2) + 1, 0);
@@ -131,7 +120,7 @@ int main()
 					closesocket(sockClient2);
 					return 0;
 				}
-				else if(recvBuf2[0] == '1' || recvBuf2[0] == '2' ||recvBuf2[0] == '5' ||recvBuf1[0] == '8')
+				else if(recvBuf2[0] == '1' || recvBuf2[0] == '2' ||recvBuf2[0] == '5')
 				{
 					send(sockClient1, recvBuf2, strlen(recvBuf2) + 1, 0);
 				}
