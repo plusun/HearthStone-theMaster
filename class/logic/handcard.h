@@ -21,7 +21,6 @@ public:
   {
     Card *card = NumberToCard(_card[position]);
     int ret = card->cost();
-    delete card;
     return ret;
   }
   Card *use_card(int position)

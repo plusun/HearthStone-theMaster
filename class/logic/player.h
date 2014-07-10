@@ -34,7 +34,8 @@ public:
   void init();
   void turn();
   void over();
-  bool use(int);
+  bool use(int , int pos = -1);
+
   // return false if too many handcards
   bool draw();
   // self means my character, -1 stands for HERO, 0..+inf stands for minions

@@ -49,7 +49,7 @@ void Player::over()
 }
 
 // use ith handcard
-bool Player::use(int i)
+bool Player::use(int i, int pos)
 {
   if (_handcard.getCost(i) > _mana.cur_mana())
     return false;
@@ -62,7 +62,7 @@ bool Player::use(int i)
     {
     case MINION:
       c = (MinionCard *)card;
-      _battlefield->summon_minion(c->minion());
+      _battlefield->summon_minion(c->minion() , this->side , pos);
       break;
     default:
       break;

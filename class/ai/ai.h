@@ -6,27 +6,28 @@
 class AI
 {
 private:
-  Player *pl;
   int side;
 public:
+  Player *pl;
+
   AI(Player *p):
-    p(pl)
+    pl(p)
   {
   }
 
   void play()
   {
     pl->turn();
-    while (pl->use(0))
-      ;
+    pl->use(0);
+      
     int anotherSide;
     for (int i = 0; i < SIDE; ++i)
       if (i != side)
 	{
-	  anotherSide = side;
+	  anotherSide = i;
 	  break;
 	}
-    for (int i = -1; i < pl->_battlefield->_minion.size(); ++i)
+	  for (int i = -1; i < pl->_battlefield->_minion[pl->side].size(); ++i)
       pl->attack(i, anotherSide, -1);
     pl->over();
   }

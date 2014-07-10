@@ -3,6 +3,11 @@
 
 #include "basic.h"
 #include "weapon.h"
+#include "cocos2d.h"
+
+USING_NS_CC;
+
+
 class Character
 {
 private:
@@ -63,6 +68,7 @@ public:
   bool newMinion();
   void newMinion(bool);
   bool canAttack();
+  Sprite * Sprite_card;
 };
 
 #endif

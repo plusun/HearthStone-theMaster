@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 #include "cocos-ext.h"
 #include "logic/player.h"
+#include "ai/ai.h"
+
 
 USING_NS_CC;
 USING_NS_CC_EXT; 
@@ -17,25 +19,30 @@ public:
 		d1(new deck()),
 		d2(new deck()),
 		player1(d1, b, true, 0),
-		player2(d2, b, false, 1)
+		player2(d2, b, false, 1),
+		ai(&player2)
 	{
 	}
 	Battlefield *b;
 	deck *d1, *d2;
 	Player player1;
 	Player player2;
-	
+	AI ai;
+
 	static cocos2d::Scene* createScene();
 	CREATE_FUNC(GameLayer);
 
-	void cardMenuCallback(Object* pSender, Player * player1);
-	void endMenuCallback(Object* pSender);
+	void cardMenuCallback(Object* pSender, Player * player1, AI * p2, int *, int *);
+	void endMenuCallback(Object* pSender , Player * p1 , AI * p2, int *,int *);
 	void timeCallback(float ct);
+	void update_battlefiled(Player* p1 ,int ,int * ,int *);
+	void update_handcard(Player* p1 );
+	bool add_touchListener(Player *,int ,int *,int *, int);
 
 	
 	virtual bool onTouchBegan(Touch *touch, Event *unused_event ,int *); 
     virtual void onTouchMoved(Touch *touch, Event *unused_event); 
-    virtual void onTouchEnded(Touch *touch, Event *unused_event ,Player * player1 ,int* ); 
+    virtual void onTouchEnded(Touch *touch, Event *unused_event ,Player * player1 ,int *, int *); 
     virtual void onTouchCancelled(Touch *touch, Event *unused_event);
 
 private:

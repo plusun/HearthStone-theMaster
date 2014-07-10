@@ -27,7 +27,7 @@ public:
       if (_hero[i] != NULL)
 	delete _hero[i];
   }
-  bool summon_minion(Minion* m, int side = 0, int position = -1)
+  bool summon_minion(Minion* m, int side , int position = -1)
   {
     if (_minion[side].size() > MAXMINION)
       return false;
