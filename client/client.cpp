@@ -1,6 +1,6 @@
 #include "client.h"
 
-vector<int> client::torecv(char* s, char c = '/')
+vector<int> client::torecv(char* s, char c)
 {
 	vector<int> vi;
 	vi.clear();
@@ -26,7 +26,7 @@ vector<int> client::torecv(char* s, char c = '/')
 	return vi;
 }
 
-char* client::tosend(vector<int> vi, char c = '/')
+char* client::tosend(vector<int> vi, char c)
 {
 	char* message = (char*) malloc(sizeof(char)* 100);
 	string str = "";
@@ -158,7 +158,7 @@ void client::end_turn()
 	free(message);
 }
 
-void client::win(int n = 1)
+void client::win(int n)
 {
 	vector<int> vi;
 	vi.push_back(6);

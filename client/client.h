@@ -13,15 +13,15 @@ class client
 public:
 	SOCKET sockClient;
 	char recvBuf[100];
-	vector<int> torecv(char* s, char c);
-	char* tosend(vector<int> vi, char c);
+	vector<int> torecv(char* s, char c = '/');
+	char* tosend(vector<int> vi, char c = '/');
 	client(string str);
 	client();
 	int start_game();						//return = 1, go first;return = 0, go second
 	void draw_card(int a);
-	void use_card(int a, int b, int c, int d);
+	void use_card(int a, int b = -1, int c = 0, int d = 0);
 	void attack(int a, int b);
 	void end_turn();
-	void win(int n);
+	void win(int n = 1);
 	vector<int> opponent_turn();
 };
