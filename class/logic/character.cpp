@@ -28,11 +28,15 @@ int Character::attack()
 }
 void Character::attacking(Character *c)
 {
-  health(health() - c->attack());
+  damaged(c->attack());
 }
 void Character::attacked(Character *who)
 {
-  health(health() - who->attack());
+  damaged(who->attack());
+}
+void Character::damaged(int damage)
+{
+  health(health() - damage);
 }
 void Character::attack(int new_attack)
 {
@@ -113,9 +117,20 @@ void Hero::destroyWeapon()
     delete _weapon;
   _weapon = NULL;
 }
+void Hero::damaged(int damage)
+{
+  if (damage < 0)
+    health(health() - damage);
+  else
+    {
+      int dearmor = damage < armor() ? damage : armor();
+      armor(armor() - dearmor);
+      health(health() - (damage - dearmor));
+    }
+}
 void Hero::attacking(Character *who)
 {
-  health(health() - who->attack());
+  damaged(who->attack());
   if (weapon() != NULL)
     {
       weapon()->durable(weapon()->durable() - 1);
@@ -135,8 +150,9 @@ void Hero::weapon(Weapon *new_weapon)
     }
 }
 
-Minion::Minion(Race r, int h, int a, int mh, int oh, int oa, bool nm):
-  Character(h, a, mh), _race(r), _ori_health(oh), _ori_attack(oa), _new_minion(nm)
+Minion::Minion(Race r, int h, int a, int mh, int oh, int oa, bool nm, Buff b):
+  Character(h, a, mh), _race(r), _ori_health(oh), _ori_attack(oa), _new_minion(nm),
+  buff(b)
 {
   if (_ori_health < 0)
     _ori_health = maxHealth();
@@ -171,8 +187,8 @@ void Minion::newMinion(bool nm)
   _new_minion = nm;
 }
 
-
 bool Minion::canAttack()
 {
   return !newMinion() && !tired() && !frozen() && attack() > 0;
 }
+

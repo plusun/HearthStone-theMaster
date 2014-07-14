@@ -4,6 +4,7 @@
 #include "basic.h"
 #include "weapon.h"
 #include "cocos2d.h"
+#include "buff.h"
 
 USING_NS_CC;
 
@@ -33,6 +34,7 @@ public:
   virtual bool canAttack();
   virtual void attacking(Character *c);
   virtual void attacked(Character *c);
+  virtual void damaged(int);
 };
 
 class Hero: public Character
@@ -49,6 +51,7 @@ public:
   Weapon *weapon();
   void weapon(Weapon *new_weapon);
   void attacking(Character *);
+  void damaged(int);
   void destroyWeapon();
 };
 
@@ -58,15 +61,18 @@ private:
   Race _race;
   int _ori_health;
   int _ori_attack;
+  // new minion means that it cannot attack at first round
   bool _new_minion;
 public:
-  Minion(Race r, int h, int a, int mh = -1, int oh = -1, int oa = -1, bool nm = true);
+  Buff buff;
+  Minion(Race r, int h, int a, int mh = -1, int oh = -1, int oa = -1, bool nm = true, Buff b = Buff());
   int originalHealth();
   void originalHealth(int);
   int originalAttack();
   void originalAttack(int);
   bool newMinion();
   void newMinion(bool);
+  void damaged(int);
   bool canAttack();
   Sprite * Sprite_card;
 };
