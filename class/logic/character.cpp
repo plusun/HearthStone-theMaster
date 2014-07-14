@@ -150,8 +150,9 @@ void Hero::weapon(Weapon *new_weapon)
     }
 }
 
-Minion::Minion(Race r, int h, int a, int mh, int oh, int oa, bool nm):
-  Character(h, a, mh), _race(r), _ori_health(oh), _ori_attack(oa), _new_minion(nm)
+Minion::Minion(Race r, int h, int a, int mh, int oh, int oa, bool nm, Buff b):
+  Character(h, a, mh), _race(r), _ori_health(oh), _ori_attack(oa), _new_minion(nm),
+  buff(b)
 {
   if (_ori_health < 0)
     _ori_health = maxHealth();
@@ -186,8 +187,8 @@ void Minion::newMinion(bool nm)
   _new_minion = nm;
 }
 
-
 bool Minion::canAttack()
 {
   return !newMinion() && !tired() && !frozen() && attack() > 0;
 }
+
