@@ -28,11 +28,15 @@ int Character::attack()
 }
 void Character::attacking(Character *c)
 {
-  health(health() - c->attack());
+  damaged(c->attack());
 }
 void Character::attacked(Character *who)
 {
-  health(health() - who->attack());
+  damaged(who->attack());
+}
+void Character::damaged(int damage)
+{
+  health(health() - damage);
 }
 void Character::attack(int new_attack)
 {
@@ -113,9 +117,20 @@ void Hero::destroyWeapon()
     delete _weapon;
   _weapon = NULL;
 }
+void Hero::damaged(int damage)
+{
+  if (damage < 0)
+    health(health() - damage);
+  else
+    {
+      int dearmor = damage < armor() ? damage : armor();
+      armor(armor() - dearmor);
+      health(health() - (damage - dearmor));
+    }
+}
 void Hero::attacking(Character *who)
 {
-  health(health() - who->attack());
+  damaged(who->attack());
   if (weapon() != NULL)
     {
       weapon()->durable(weapon()->durable() - 1);

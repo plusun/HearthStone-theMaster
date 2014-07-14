@@ -33,6 +33,7 @@ public:
   virtual bool canAttack();
   virtual void attacking(Character *c);
   virtual void attacked(Character *c);
+  virtual void damaged(int);
 };
 
 class Hero: public Character
@@ -49,6 +50,7 @@ public:
   Weapon *weapon();
   void weapon(Weapon *new_weapon);
   void attacking(Character *);
+  void damaged(int);
   void destroyWeapon();
 };
 
