@@ -35,6 +35,7 @@ public:
   virtual use()
   {
     Battlefield *bf = player->_battlefield;
+    int MAXHP = 10086;
     switch (target)
       {
       case ALL:
@@ -100,22 +101,40 @@ public:
     switch (type)
       {
       case BuffTaunt:
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->buff._taunt = true;
 	break;
       case BuffCharge:
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->buff._charge = true;
 	break;
       case BuffSpellDmg:
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->buff._spell_dmg += value;
 	break;
       case BuffWindfurry:
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->buff._windfury = true;
 	break;
       case BuffStealth:
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->buff._stealth = true;
 	break;
       case BuffAtk:
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->buff._atk += value;
 	break;
       case BuffHp:
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->buff._hp += value;	
 	break;
       case BuffOneturn:
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->buff._oneturn = true;
 	break;
       case BuffShield:
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->buff._shield = true;
 	break;
       case DMG:
 	for (int i = 0; i < heroes.size(); ++i)
@@ -130,10 +149,13 @@ public:
 	  minions[i]->damaged(-value);
 	break;
       case CLEAR:
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->damaged(MAXHP);
 	break;
       default:
 	break;
       }
+    bf->checkAndDead();
   }
 };
 
