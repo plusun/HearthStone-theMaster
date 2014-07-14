@@ -23,8 +23,6 @@ void Player::init()					//game start init
     {
       for (int i = 0; i < 3; i++)
 	  draw();
-      _mana.inc_max_mana(1);
-      _mana.inc_cur_mana(1);
     }
   else
     {
