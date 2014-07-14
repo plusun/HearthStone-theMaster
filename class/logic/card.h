@@ -10,7 +10,7 @@ USING_NS_CC;
 
 #define MAXCARDNO 500
 
-enum CardType { MINION };
+enum CardType { MINION, SPELL };
 
 class Card
 {

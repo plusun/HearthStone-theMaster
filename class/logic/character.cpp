@@ -191,4 +191,3 @@ bool Minion::canAttack()
 {
   return !newMinion() && !tired() && !frozen() && attack() > 0;
 }
-

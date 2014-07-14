@@ -1,41 +1,147 @@
-#include "basic.h"
+#ifndef _SPELL_
+#define _SPELL_
 
-enum target{ally,all_ally,enemy,all_enemy};
+#include "basic.h"
+#include "character.h"
+
+enum SpellType
+  {
+    BuffTaunt, BuffCharge, BuffSpellDmg,
+    BuffWindfurry, BuffStealth, BuffAtk,
+    BuffHp, BuffOneturn, BuffShield,
+    DMG, HEAL, CLEAR
+  };
+enum Target
+  {
+    SPECIFIC, ALL,
+    AllHero, AllMinion,
+    AllEnemy, AllEnemyHero,
+    AllEnemyMinion
+  };
 
 class Spell
 {
-   virtual void cast() = 0;
+public:
+  Spell(Target t, SpellType st, int v, Player *p):
+    target(t), type(st), value(v), pl(p)
+  {
+  }
+  vector<Hero *> heroes;
+  vector<Minion *> minions;
+  Target target;
+  SpellType type;
+  int value;
+  Player *pl;
+  virtual use()
+  {
+    Battlefield *bf = player->_battlefield;
+    switch (target)
+      {
+      case ALL:
+	heroes.clear();
+	minions.clear();
+	for (int i = 0; i < SIDE; ++i)
+	  {
+	    heroes.push_back(bf->_hero[i]);
+	    for (int j = 0; j < bf->_minion[i].size(); ++j)
+	      minions.push_back(bf->_minion[i][j]);
+	  }
+	break;
+      case AllHero:
+	heroes.clear();
+	minions.clear();
+	for (int i = 0; i < SIDE; ++i)
+	  {
+	    heroes.push_back(bf->_hero[i]);
+	  }
+	break;
+      case AllMinion:
+	heroes.clear();
+	minions.clear();
+	for (int i = 0; i < SIDE; ++i)
+	  {
+	    for (int j = 0; j < bf->_minion[i].size(); ++j)
+	      minions.push_back(bf->_minion[i][j]);
+	  }
+	break;
+      case AllEnemy:
+	heroes.clear();
+	minions.clear();
+	for (int i = 0; i < SIDE; ++i)
+	  if (i != pl->side)
+	    {
+	      heroes.push_back(bf->_hero[i]);
+	      for (int j = 0; j < bf->_minion[i].size(); ++j)
+		minions.push_back(bf->_minion[i][j]);
+	    }
+	break;
+      case AllEnemyHero:
+	heroes.clear();
+	minions.clear();
+	for (int i = 0; i < SIDE; ++i)
+	  if (i != pl->side)
+	    {
+	      heroes.push_back(bf->_hero[i]);
+	    }
+	break;
+      case AllEnemyMinion:
+	heroes.clear();
+	minions.clear();
+	for (int i = 0; i < SIDE; ++i)
+	  if (i != pl->side)
+	    {
+	      for (int j = 0; j < bf->_minion[i].size(); ++j)
+		minions.push_back(bf->_minion[i][j]);
+	    }
+	break;
+      default:
+	break;
+      }
+    switch (type)
+      {
+      case BuffTaunt:
+	break;
+      case BuffCharge:
+	break;
+      case BuffSpellDmg:
+	break;
+      case BuffWindfurry:
+	break;
+      case BuffStealth:
+	break;
+      case BuffAtk:
+	break;
+      case BuffHp:
+	break;
+      case BuffOneturn:
+	break;
+      case BuffShield:
+	break;
+      case DMG:
+	for (int i = 0; i < heroes.size(); ++i)
+	  heroes[i]->damaged(value);
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->damaged(value);
+	break;
+      case HEAL:
+	for (int i = 0; i < heroes.size(); ++i)
+	  heroes[i]->damaged(-value);
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->damaged(-value);
+	break;
+      case CLEAR:
+	break;
+      default:
+	break;
+      }
+  }
 };
 
-class Single_spell : public Spell
+class Flamestrike: Spell
 {
-	Character _select_target;
-	void effect1();				//buff,dmg,heal
-	bool do_effect2();
-	void effect2();				//call imm-use_spell?
+public:
+  Flamestrike(Player *p):
+    Spell(AllEnemyMinion, DMG, 4, p) {}
 };
 
-class Aoe_spell : public Spell
-{
-	target _target;
-	void effect1();				//buff,dmg,heal
-};
-
-class Adjacent_spell : public Spell
-{
-	Character _select_target;
-	Character _adjacent_target[2];
-	void effect1();
-	void effect2();
-};
-
-class Two_target_spell : public Spell
-{
-	Character _target[2];
-	void effect();
-};
-
-class Imm_use_spell : public Spell
-{
-	vector<Character> _target;			//should be cal in cast()
-};
+#endif
