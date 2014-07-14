@@ -8,7 +8,6 @@
 
 USING_NS_CC;
 
-
 class Character
 {
 private:
