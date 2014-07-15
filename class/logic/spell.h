@@ -9,7 +9,7 @@ enum SpellType
     BuffTaunt, BuffCharge, BuffSpellDmg,
     BuffWindfurry, BuffStealth, BuffAtk,
     BuffHp, BuffOneturn, BuffShield,
-    DMG, HEAL, CLEAR
+    DMG, HEAL, CLEAR, IMMUNE, FROZEN, SILENCE
   };
 enum Target
   {
@@ -148,9 +148,29 @@ public:
 	for (int i = 0; i < minions.size(); ++i)
 	  minions[i]->damaged(-value);
 	break;
+      case IMMUNE:
+	for (int i = 0; i < heroes.size(); ++i)
+	  heroes[i]->immune(true);
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->immune(true);
+	break;
+      case FROZEN:
+	for (int i = 0; i < heroes.size(); ++i)
+	  heroes[i]->frozen(true);
+	for (int i = 0; i < minions.size(); ++i)
+	  minions[i]->frozen(true);
+	break;
       case CLEAR:
 	for (int i = 0; i < minions.size(); ++i)
 	  minions[i]->damaged(MAXHP);
+	break;
+      case SILENCE:
+	for (int i = 0; i < minions.size(); ++i)
+	  {
+	    minions[i]->buff = Buff();
+	    minions[i]->frozen(false);
+	    minions[i]->immune(false);
+	  }
 	break;
       default:
 	break;
@@ -165,5 +185,7 @@ public:
   Flamestrike(Player *p):
     Spell(AllEnemyMinion, DMG, 4, p) {}
 };
+
+
 
 #endif
