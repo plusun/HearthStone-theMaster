@@ -186,6 +186,4 @@ public:
     Spell(AllEnemyMinion, DMG, 4, p) {}
 };
 
-
-
 #endif
