@@ -6,7 +6,7 @@ deck::deck()
   srand(time(0));
   for (int i = 0; i < _amount; ++i)
     {
-      _card[i] = rand() % MAXCARDNO;
+      _card[i] = rand() % MAXCARDNO + 1;
     }
 
 }
