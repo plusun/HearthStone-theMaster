@@ -3,6 +3,7 @@
 
 #include "basic.h"
 #include "character.h"
+#include "player.h"
 
 enum SpellType
   {
@@ -32,9 +33,10 @@ public:
   SpellType type;
   int value;
   Player *pl;
-  virtual use()
+
+  virtual void use()
   {
-    Battlefield *bf = player->_battlefield;
+    Battlefield *bf = pl->_battlefield;
     int MAXHP = 10086;
     switch (target)
       {

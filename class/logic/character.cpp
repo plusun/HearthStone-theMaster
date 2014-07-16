@@ -187,6 +187,14 @@ void Minion::newMinion(bool nm)
   _new_minion = nm;
 }
 
+void Minion::damaged(int damage)
+{
+	int debuf = damage < buff._hp ? damage : buff._hp;
+	damage -= debuf;
+	buff._hp -= debuf;
+	health(health() - damage);
+}
+
 bool Minion::canAttack()
 {
   return !newMinion() && !tired() && !frozen() && attack() > 0;
