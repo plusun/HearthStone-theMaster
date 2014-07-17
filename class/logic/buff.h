@@ -18,4 +18,4 @@ public:
     _hp(0), _oneturn(false), _shield(false)
   {
   }
-}
+};

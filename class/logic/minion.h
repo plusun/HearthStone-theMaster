@@ -34,6 +34,7 @@ public:
 
 class IronfurGrizzly: public Minion
 {
+public:
   IronfurGrizzly():
     Minion(beast, 3, 3) {}
 };
