@@ -7,10 +7,29 @@
 #include <fstream>
 using namespace std;
     
+bool SearchID(char *ID,char * Filename)
+{
+ char ch[200];
+ bool judge=false;
+  ifstream in(Filename);
+  while(in.getline(ch,200))
+  {
+   if(strstr(ch,ID)!=NULL)
+   {
+    judge=true;
+    printf("%s\n",ch);
+   }
+  }
+  if(!judge)
+   printf("Wrong ID or PSW");
+  in.close();
+  return judge;
+}
 
 int main()
 {
 	char filename[] = "record.log"; // 此处写入文件名 
+	char filename2[] = "user.log"; 
 
 	int err; // 错误信息
 	int len;
@@ -58,6 +77,7 @@ int main()
 	len = sizeof(SOCKADDR);
 
 	ofstream fout(filename);
+	ofstream fout2(filename2);
 
 	while (1)
 	{
@@ -68,6 +88,28 @@ int main()
 		send(sockClient1, sendBuf, strlen(sendBuf) + 1, 0); // 获取客户端返回的数据
 		sprintf_s(sendBuf, "欢迎 ip: %s 的用户连接, 这里是 HearthStone 的服务器\n", inet_ntoa(addrClient2.sin_addr));
 		send(sockClient2, sendBuf, strlen(sendBuf) + 1, 0); 
+
+
+
+			while (1)
+			{
+				char a ,b;
+				if(recv(sockClient1, recvBuf1, 100, 0)<=0)
+					continue;
+				printf("C1:%s\n",recvBuf1);
+				if(recv(sockClient2, recvBuf2, 100, 0)<=0)
+					continue;
+				printf("C2:%s\n",recvBuf2);
+				a = recvBuf1[0];
+				b = recvBuf2[0];
+				if(a == b  && b == '9')
+				{
+					if( SearchID(recvBuf1,"user.log")  && SearchID(recvBuf2,"user.log") )  
+					break;
+				}
+			}
+
+
 
 			while (1)
 			{
@@ -92,6 +134,7 @@ int main()
 					break;
 				}
 			}
+
 		while (1)
 		{
 			while(1)
