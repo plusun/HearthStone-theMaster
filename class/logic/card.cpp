@@ -3,6 +3,8 @@
 #include <string>
 #include <sstream>
 
+std::map<int, Card *> cardPool;
+
 string convertInt(int number)
 {
   std::stringstream ss;
@@ -17,33 +19,37 @@ string NumberToFilename(int no)
 
 Card *NumberToCard(int no)
 {
-  MinionCard *card;
-  switch (no)
+  if (cardPool.find(no) == cardPool.end())
     {
-    case 1:
-      card = new MinionCard(1, NULL);
-      card->minion(new Wisp());
-      break;
-    case 2:
-      card = new MinionCard(2, NULL);
-      card->minion(new BloodfenRaptor());
-    case 3:
-      card = new MinionCard(2, NULL);
-      card->minion(new Amani());
-      break;
-    case 4:
-      card = new MinionCard(3, NULL);
-      card->minion(new JunglePanther());
-      break;
-    case 5:
-      card = new MinionCard(3, NULL);
-      card->minion(new IronfurGrizzly());
-      break;
+      MinionCard *card;
+      switch (no)
+	{
+	case 1:
+	  card = new MinionCard(1, NULL);
+	  card->minion(new Wisp());
+	  break;
+	case 2:
+	  card = new MinionCard(2, NULL);
+	  card->minion(new BloodfenRaptor());
+	case 3:
+	  card = new MinionCard(2, NULL);
+	  card->minion(new Amani());
+	  break;
+	case 4:
+	  card = new MinionCard(3, NULL);
+	  card->minion(new JunglePanther());
+	  break;
+	case 5:
+	  card = new MinionCard(3, NULL);
+	  card->minion(new IronfurGrizzly());
+	  break;
       
-    default:
-      return NULL;
-      break;
+	default:
+	  return NULL;
+	  break;
+	}
+      cardPool[no] = card;
     }
-  return card;
+  return cardPool[no];
 }
 

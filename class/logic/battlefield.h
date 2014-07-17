@@ -27,10 +27,13 @@ public:
       if (_hero[i] != NULL)
 	delete _hero[i];
   }
-  bool summon_minion(Minion* m, int side , int position = -1)
+  bool summon_minion(Minion* minion, int side , int position = -1)
   {
     if (_minion[side].size() > MAXMINION)
       return false;
+    Minion *m = new Minion(minion->race(), minion->health(), minion->attack(),
+			   minion->maxHealth(), minion->originalHealth(), minion->originalAttack(),
+			   minion->newMinion(), minion->buff);
     if (position < 0 || position > _minion[side].size())
       _minion[side].push_back(m);
     else

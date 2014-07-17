@@ -73,6 +73,7 @@ public:
   void newMinion(bool);
   void damaged(int);
   bool canAttack();
+  Race race();
   Sprite * Sprite_card;
 };
 
