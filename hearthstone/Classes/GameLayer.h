@@ -6,7 +6,6 @@
 #include "logic/player.h"
 #include "logic/client.h"
 #include "PopLayer.h"
-#include "ai/ai.h"
 
 using namespace std;
 
@@ -30,6 +29,7 @@ public:
 	Player player1;
 	Player player2;
 	client cl;
+	vector<Card * >sprite_vec;
 	static int operator_position;
 	static int battlefield_position;
 
@@ -45,7 +45,7 @@ public:
 	static void wait_message(GameLayer *,Player * , Player *);
 
 	
-	virtual bool onTouchBegan(Touch *touch, Event *unused_event ); 
+	virtual bool onTouchBegan(Touch *touch, Event *unused_event ,int *); 
     virtual void onTouchMoved(Touch *touch, Event *unused_event); 
     virtual void onTouchEnded(Touch *touch, Event *unused_event ,Player * player1 ,int *, int *); 
     virtual void onTouchCancelled(Touch *touch, Event *unused_event);

@@ -59,5 +59,5 @@ public:
 };
 extern std::map<int, Card *> cardPool;
 Card *NumberToCard(int no);
-
+string NumberToFilename(int no);
 #endif

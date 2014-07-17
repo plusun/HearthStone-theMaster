@@ -3,8 +3,6 @@
 #include <string>
 #include <sstream>
 
-std::map<int, Card *> cardPool;
-
 string convertInt(int number)
 {
   std::stringstream ss;
@@ -14,14 +12,12 @@ string convertInt(int number)
 
 string NumberToFilename(int no)
 {
-  return convertInt(no) + ".jpg";
+  return convertInt(no) + ".png";
 }
 
 Card *NumberToCard(int no)
 {
-  if (cardPool.find(no) == cardPool.end())
-    {
-      MinionCard *card;
+     MinionCard *card;
       switch (no)
 	{
 	case 1:
@@ -48,8 +44,6 @@ Card *NumberToCard(int no)
 	  return NULL;
 	  break;
 	}
-      cardPool[no] = card;
-    }
-  return cardPool[no];
+  return card;
 }
 
