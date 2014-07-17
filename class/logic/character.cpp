@@ -199,7 +199,7 @@ bool Minion::canAttack()
 {
   return !newMinion() && !tired() && !frozen() && attack() > 0;
 }
-Race race()
+Race::Race race()
 {
   return _race;
 }
