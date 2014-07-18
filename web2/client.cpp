@@ -22,7 +22,7 @@ int main()
 		return 0;
 	} // 新建客户端scoket
 	sockClient = socket(AF_INET, SOCK_STREAM, 0); // 定义要连接的服务端地址
-	addrServer.sin_addr.S_un.S_addr = inet_addr("192.168.201.28"); // 目标IP (127.0.0.1是本机地址)
+	addrServer.sin_addr.S_un.S_addr = inet_addr("127.0.0.1"); // 目标IP (127.0.0.1是本机地址)
 	addrServer.sin_family = AF_INET; // 协议类型是INET
 	addrServer.sin_port = htons(6000); // 连接端口6000
 	// 让 sockClient 连接到 服务端
@@ -39,10 +39,18 @@ int main()
 		send(sockClient, message, strlen(message) + 1, 0); // 关闭socket
 		printf("send: %s\n", message);
 
+		if(message[0] == '9' && recv(sockClient, recvBuf, 100, 0)>0)
+			break;
+	}
+	while(1)
+	{
+		scanf_s("%s",message,100);
+		send(sockClient, message, strlen(message) + 1, 0); // 关闭socket
+		printf("send: %s\n", message);
+
 		if(message[0] == '3' && recv(sockClient, recvBuf, 100, 0)>0)
 			break;
 	}
-
 	printf("received: %s\n",recvBuf);
 
 	if(recvBuf[2] == '1')
