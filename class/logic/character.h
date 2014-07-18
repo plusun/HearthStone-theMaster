@@ -5,8 +5,10 @@
 #include "weapon.h"
 #include "cocos2d.h"
 #include "buff.h"
-
+#include <string>
 USING_NS_CC;
+
+#define MAXHERONO 9
 
 class Character
 {
@@ -16,6 +18,7 @@ private:
 protected:
   int _attack;
 public:
+  int no;
   Character(int h,  int a, int mh = -1, bool f = false, bool i = false);
   int health();
   void health(int new_health);
@@ -76,5 +79,7 @@ public:
   Race race();
   Sprite * Sprite_card;
 };
+
+std::string CharacterToFilename(Character *);
 
 #endif

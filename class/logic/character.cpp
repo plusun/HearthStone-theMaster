@@ -203,3 +203,7 @@ Race Minion::race()
 {
   return _race;
 }
+std::string CharacterToFilename(Character *c)
+{
+  return "minion" + convertInt(c->no) + ".png";
+}

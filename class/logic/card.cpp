@@ -1,14 +1,6 @@
+#include "basic.h"
 #include "card.h"
 #include "minion.h"
-#include <string>
-#include <sstream>
-
-string convertInt(int number)
-{
-  std::stringstream ss;
-  ss << number;
-  return ss.str();
-}
 
 string NumberToFilename(int no)
 {
