@@ -41,14 +41,14 @@ public:
 	void timeCallback(float ct);
 	int update_battlefiled(Player* p1 ,int ,int * ,int *);
 	void update_handcard(Player* p1 ,int );
-	bool add_touchListener(Player *,int ,int *,int *, int);
+	bool b_add_touchListener(Player *,int ,int *,int *, int);
+	bool h_add_touchListener(Player *,int *,int *, int);
 	static void wait_message(GameLayer *,Player * , Player *);
-
+	void init_img();
 	
-	virtual bool onTouchBegan(Touch *touch, Event *unused_event ,int *); 
+	virtual bool onTouchBegan(Touch *touch, Event *unused_event); 
     virtual void onTouchMoved(Touch *touch, Event *unused_event); 
-    virtual void onTouchEnded(Touch *touch, Event *unused_event ,Player * player1 ,int *, int *); 
-    virtual void onTouchCancelled(Touch *touch, Event *unused_event);
+    virtual void onTouchEnded(Touch *touch, Event *unused_event); 
 
 private:
 	

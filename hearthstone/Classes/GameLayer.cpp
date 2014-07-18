@@ -4,6 +4,9 @@ USING_NS_CC;
 
 #define MAXCARD 5
 #define MAXMINION 5
+#define WINSIZE_W 960
+#define WINSIZE_H 640
+#define SPACING 100
 
 int GameLayer::operator_position = 0;
 int GameLayer::battlefield_position  = 0;
@@ -35,11 +38,12 @@ bool GameLayer::init()
 	CCSize winSize=CCDirector::sharedDirector()->getWinSize();//get window size
 
 	/*init player*/
-	//player1.is_first = cl.start_game();
-	//player1.is_first = false;
+	init_img();
+	player1.is_first = cl.start_game();
 	player1.init();
 	player2.init();
-	
+
+
 	/* background */
 	Sprite* bgSp = Sprite::create("gamelayer.png");
     bgSp->setPosition(ccp(winSize.width / 2, winSize.height / 2));
@@ -79,38 +83,79 @@ bool GameLayer::init()
 	pLabel->setPosition(ccp(winSize.width / 2+390, winSize.height / 2-150));  
 	this->addChild(pLabel, 1);  
 
-	/* init the handcard */
-	for(int i = 0 ; i < player1._handcard._card.size(); i++)
-	{
-		Card* tmp_sprite = NumberToCard(player1._handcard._card[i]);
-		sprite_vec.push_back(tmp_sprite);
-		tmp_sprite->Sprite_card = Sprite::create(NumberToFilename(player1._handcard._card[i]));//we should use the file path
-		tmp_sprite->Sprite_card->setPosition(Point(100 + 100 * i, winSize.height / 2-260));
-		this->addChild(tmp_sprite->Sprite_card);		
-	}
-
-	/* create the event listenr to the sprite*/
-		
-	auto touchListener = EventListenerTouchOneByOne::create();
-	touchListener->setSwallowTouches(true);
-	touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this , &operator_position);
-	touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
-	touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this, &player1 ,&operator_position ,&battlefield_position);
-	
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, sprite_vec[0]->Sprite_card);
-	for(int i = 1 ; i < player1._handcard._card.size() ;i++)
-	{
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener->clone(),sprite_vec[i]->Sprite_card);
-	}
 
 	if(player1.is_first)
 	{
 		player1.turn();
+
+		/* init the handcard */
+		for(int i = 0 ; i < player1._handcard._card.size(); i++)
+		{
+			Card* tmp_sprite = NumberToCard(player1._handcard._card[i]);
+			sprite_vec.push_back(tmp_sprite);
+			tmp_sprite->Sprite_card = Sprite::create(NumberToFilename(player1._handcard._card[i]));//we should use the file path
+			tmp_sprite->Sprite_card->setPosition(Point(SPACING + SPACING * i, winSize.height / 2-260));
+			this->addChild(tmp_sprite->Sprite_card);		
+		}
+
+		/* create the event listenr to the sprite*/
+		
+		auto touchListener = EventListenerTouchOneByOne::create();
+		touchListener->setSwallowTouches(true);
+		touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
+		touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
+		touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
+	
+		_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, sprite_vec[0]->Sprite_card);
+		for(int i = 1 ; i < player1._handcard._card.size() ;i++)
+		{
+			_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener->clone(),sprite_vec[i]->Sprite_card);
+		}
+
 		for(int i  = 0 ; i < player1._handcard._card.size() ; i++)
 		{
-			//cl.draw_card(player1._handcard._card[i]);
-			//Sleep(1000);
+			cl.draw_card(player1._handcard._card[i]);
+			Sleep(1000);
 		}
+	}
+	else
+	{
+		player2.turn();
+		player2.turn();
+		player2.turn();
+		player2.turn();
+		player2.turn();
+		player2.turn();
+		player2.turn();
+		player2.turn();
+		player2.turn();
+
+		/* init the handcard */
+		for(int i = 0 ; i < player1._handcard._card.size(); i++)
+		{
+			Card* tmp_sprite = NumberToCard(player1._handcard._card[i]);
+			sprite_vec.push_back(tmp_sprite);
+			tmp_sprite->Sprite_card = Sprite::create(NumberToFilename(player1._handcard._card[i]));//we should use the file path
+			tmp_sprite->Sprite_card->setPosition(Point(SPACING + SPACING * i, winSize.height / 2-260));
+			this->addChild(tmp_sprite->Sprite_card);		
+		}
+
+		/* create the event listenr to the sprite*/
+		
+		auto touchListener = EventListenerTouchOneByOne::create();
+		touchListener->setSwallowTouches(true);
+		touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
+		touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
+		touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
+	
+		_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, sprite_vec[0]->Sprite_card);
+		for(int i = 1 ; i < player1._handcard._card.size() ;i++)
+		{
+			_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener->clone(),sprite_vec[i]->Sprite_card);
+		}
+
+		std::thread wait(GameLayer::wait_message, this, &player1 , &player2);
+		wait.detach();
 	}
 	
     return true;
@@ -120,35 +165,32 @@ bool GameLayer::init()
 /* 每回合出牌后调用的回调函数*/
 void GameLayer::cardMenuCallback(Object* pSender, Player * player1,int *operator_position,int *battlefield_position )
 {
-	if(NumberToCard(player1->_handcard._card[*operator_position])->_type ==  MINION)
-			{
-				/* release the sprite of the handcard */
-				this->removeChild(NumberToCard(player1->_handcard._card[*operator_position])->Sprite_card,true);
+	if(sprite_vec[*operator_position]->_type ==  MINION)
+	{
 				
-				if	( player1->use(*operator_position ,* battlefield_position) )
+		if	( player1->use(*operator_position ,* battlefield_position) )
+		{
+			/* release the sprite of the handcard */
+			this->removeChild(sprite_vec[*operator_position]->Sprite_card,true);
+			/*maybe we need send some mes to server*/
+			int tmp_pos  = update_battlefiled(player1 , 0 ,operator_position , battlefield_position);
+			sprite_vec.erase(sprite_vec.begin() + *operator_position);
+			cl.use_card(*operator_position , tmp_pos);
+			/*restore the hand card*/
+			if(player1->_handcard._card.size() > 1)
+			{
+				for(int i  = (* operator_position); i < player1->_handcard._card.size(); i++ )
 				{
-					/*maybe we need send some mes to server*/
-					int tmp_pos  = update_battlefiled(player1 , 0 ,operator_position , battlefield_position);
-					cl.use_card(*operator_position , tmp_pos);
-					/*restore the hand card*/
-					if(player1->_handcard._card.size() > 1)
-					{
-						for(int i  = (* operator_position) + 1; i < player1->_handcard._card.size(); i++ )
-						{
-							NumberToCard(player1->_handcard._card[i])->Sprite_card -> setPosition(Point(100 * i, 640 / 2-260));
-						}
-					}
-				}
-				/*if we can not use the card , we should restore the position of the card*/
-				else
-				{
-					NumberToCard(player1->_handcard._card[*operator_position])->Sprite_card = Sprite::create(NumberToFilename(player1->_handcard._card[*operator_position]));//we should use the file path
-					NumberToCard(player1->_handcard._card[*operator_position])->Sprite_card -> setPosition(Point(100 +100 * *operator_position , 640 / 2-260));
-					this->addChild(NumberToCard(player1->_handcard._card[*operator_position])->Sprite_card);
-					
-			
+					sprite_vec[i]->Sprite_card -> setPosition(Point(SPACING + SPACING * i, WINSIZE_H / 2-260));
 				}
 			}
+		}
+		/*if we can not use the card , we should restore the position of the card*/
+		else
+		{
+			sprite_vec[*operator_position]->Sprite_card->setPosition(Point(SPACING +SPACING * *operator_position , WINSIZE_H / 2-260));
+		}
+	}
 
 }
 
@@ -162,7 +204,6 @@ void GameLayer::endMenuCallback(Object* pSender, Player * p1,Player * p2 , int *
 	p2->turn();
 	std::thread wait(GameLayer::wait_message, this, p1 , p2);
 	wait.detach();
-	
 }
 
 /* 更新战场随从的信息 */
@@ -179,17 +220,18 @@ int GameLayer::update_battlefiled(Player * p1 ,int side ,int * operator_position
 		}
 		
 		/* add new minion the battlefield */
-
-		p1->_battlefield->_minion[side][tmp_pos]->Sprite_card = Sprite::create(NumberToFilename(p1->_handcard._card[*operator_position]));
-		p1->_battlefield->_minion[side][tmp_pos]->Sprite_card->setPosition(Point(60 + 100 * tmp_pos + 45 , side * 200 + 140 +64 ));
+		string str = CharacterToFilename(p1->_battlefield->_minion[side][tmp_pos]);
+		p1->_battlefield->_minion[side][tmp_pos]->Sprite_card = Sprite::create(str,Rect(0,0,90,128));
+		Point p = Point(60 + SPACING * tmp_pos + 45 , side * 200 + 140 + 64 );
+		p1->_battlefield->_minion[side][tmp_pos]->Sprite_card->setPosition(p);
 		this->addChild(p1->_battlefield->_minion[side][tmp_pos]->Sprite_card);
-		add_touchListener(p1 ,side , operator_position , battlefield_position , tmp_pos);
+		b_add_touchListener(p1 ,side , operator_position , battlefield_position , tmp_pos);
 		
 		for(int i  = tmp_pos + 1 ; i <  p1->_battlefield->_minion[side].size(); i++)
 		{
 			if(p1->_battlefield->_minion[side][i] != NULL)
 			{
-				p1->_battlefield->_minion[side][i - 1 ]->Sprite_card->setPosition(Point(60 + 100 *(i - 1) + 45 , side * 200  + 140 +64 ));
+				p1->_battlefield->_minion[side][i - 1 ]->Sprite_card->setPosition(Point(60 + SPACING *(i - 1) + 45 , side * 200  + 140 + 64 ));
 			}
 		}
 
@@ -199,26 +241,43 @@ int GameLayer::update_battlefiled(Player * p1 ,int side ,int * operator_position
 
 void GameLayer:: update_handcard(Player* p1 ,int num)
 {
-	for(int i = 0 ; i <  num ; i++)
+	int size_card = p1->_handcard._card.size();
+	for(int i = num ; i > 0 ; i--)
 	{
-		NumberToCard(p1->_handcard._card[p1->_handcard._card.size() - 1])->Sprite_card = Sprite::create("218.png");
-		NumberToCard(p1->_handcard._card[p1->_handcard._card.size() - 1])->Sprite_card -> setPosition(Point(100 *( p1->_handcard._card.size() + num - 1) , 640 / 2-260));
-		this->addChild( NumberToCard(p1->_handcard._card[ p1->_handcard._card.size() - 1])->Sprite_card);
-		cl.draw_card(player1._handcard._card[p1->_handcard._card.size() - 1]);
+		Card* tmp_sprite = NumberToCard(p1->_handcard._card[size_card - i]);
+		sprite_vec.push_back(tmp_sprite);
+		string str = NumberToFilename(player1._handcard._card[size_card - i]);
+		tmp_sprite->Sprite_card = Sprite::create(str,Rect(0,0,90,128));
+		tmp_sprite->Sprite_card->setPosition(Point(SPACING + SPACING * ( size_card - i ), WINSIZE_H / 2-260));
+		h_add_touchListener(p1 ,&operator_position ,&battlefield_position ,size_card - i);
+		this->addChild(tmp_sprite->Sprite_card);
 	}
 }
 
-/* 将需要监听的对象加入监听 */
-bool GameLayer:: add_touchListener(Player * p1,int side , int * operator_pos ,int * battlefield_pos ,int tmp_pos)
+/* 将战场中需要监听的对象加入监听 */
+bool GameLayer:: b_add_touchListener(Player * p1,int side , int * operator_pos ,int * battlefield_pos ,int tmp_pos)
 {
 	auto touchListener = EventListenerTouchOneByOne::create();
 	touchListener->setSwallowTouches(false);
-	touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this , operator_pos);
+	touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
 	touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
-	touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this, p1 ,operator_pos , battlefield_pos);
+	touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener,  p1->_battlefield->_minion[side][tmp_pos]->Sprite_card);
 	return true;
 }
+
+/* 将手牌中需要监听的对象加入监听 */
+bool GameLayer:: h_add_touchListener(Player * p1, int * operator_pos ,int * battlefield_pos ,int tmp_pos)
+{
+	auto touchListener = EventListenerTouchOneByOne::create();
+	touchListener->setSwallowTouches(false);
+	touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
+	touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener,  sprite_vec[tmp_pos]->Sprite_card);
+	return true;
+}
+
 
 void GameLayer::timeCallback(float c)
 {
@@ -227,7 +286,7 @@ void GameLayer::timeCallback(float c)
 
 
 
- bool GameLayer:: onTouchBegan(Touch *touch, Event *event , int * operator_position)
+ bool GameLayer:: onTouchBegan(Touch *touch, Event *event)
 {
 	auto target = static_cast<Sprite*>(event->getCurrentTarget());
 	Node * b=  event->getCurrentTarget();
@@ -243,7 +302,7 @@ void GameLayer::timeCallback(float c)
 		if(((int) touch->getLocation().x % 100) > 60 || ( ( (int)(touch->getLocation()).x % 100 ) <40 ))
 			{
 				int tmp = ( touch->getLocation().x - 40 ) / 100;
-				*operator_position = tmp;
+				operator_position = tmp;
 			}
 	    if (rect.containsPoint(locationInNode))
 			{
@@ -260,7 +319,7 @@ void  GameLayer:: onTouchMoved(Touch *touch, Event *event)
 		target->setPosition(target->getPosition() + touch->getDelta());
 }; 
 
-void GameLayer:: onTouchEnded(Touch *touch, Event *event , Player * player1 , int * operator_position , int * battlefield_position)
+void GameLayer:: onTouchEnded(Touch *touch, Event *event)
 {
 		auto target = static_cast<Sprite*>(event->getCurrentTarget());
 		Point locationInNode = touch->getLocation();
@@ -278,7 +337,7 @@ void GameLayer:: onTouchEnded(Touch *touch, Event *event , Player * player1 , in
 		{
 			target->setOpacity(255);
 			target->setPosition(60+45,140+64);
-			* battlefield_position = 0;
+			battlefield_position = 0;
 			
 			
 		}
@@ -286,40 +345,40 @@ void GameLayer:: onTouchEnded(Touch *touch, Event *event , Player * player1 , in
 		{
 			target->setOpacity(255);
 			target->setPosition(160+45,140+64);
-			* battlefield_position = 1;
+			battlefield_position = 1;
 			
 		}
 		else if(rect3.containsPoint(locationInNode))
 		{
 			target->setOpacity(255);
 			target->setPosition(260+45,140+64);
-			* battlefield_position = 2;
+			battlefield_position = 2;
 		}
 		else if(rect4.containsPoint(locationInNode))
 		{
 			target->setOpacity(255);
 			target->setPosition(360+45,140+64);
-			* battlefield_position = 3;
+			battlefield_position = 3;
 			
 		}
 		else if(rect5.containsPoint(locationInNode))
 		{
 			target->setOpacity(255);
 			target->setPosition(460+45,140+64);
-			* battlefield_position = 4;
+			battlefield_position = 4;
 			
 		}
 		else if(rect6.containsPoint(locationInNode))
 		{
 			target->setOpacity(255);
 			target->setPosition(560+45,140+64);
-			* battlefield_position = 5;
+			battlefield_position = 5;
 			
 		}
 		else
 		{
 			target->setOpacity(255);
-			target->setPosition(Point(100 + 100 * ( *operator_position) , 640 / 2-260));
+			target->setPosition(Point(SPACING + SPACING * (operator_position) , 640 / 2-260));
 			f = false;
 		}
 }; 
@@ -361,8 +420,8 @@ void GameLayer:: wait_message(GameLayer * g,Player * player1 , Player * player2)
 				_side = vi[3];
 				_target = vi[4];
 				//TODO: player2.use(_card_position, _position, _side, _target);
-				player2->use(_card_position, _position);
-				g->update_battlefiled(player2 , 1 ,&_card_position , &_position );
+				if(player2->use(_card_position, _position))
+					g->update_battlefiled(player2 , 1 ,&_card_position , &_position );
 				break;
 			case 2:
 				_minion1 = vi[1];
@@ -380,5 +439,13 @@ void GameLayer:: wait_message(GameLayer * g,Player * player1 , Player * player2)
 		
 	}
 }
-
-void GameLayer:: onTouchCancelled(Touch *touch, Event *unused_event){};
+void GameLayer::init_img()
+{
+	for(int i = 0 ; i < player1._deck->_amount; i++ )
+	{
+		Card* tmp_sprite = NumberToCard(player1._deck->_card[i]);
+		sprite_vec.push_back(tmp_sprite);
+		tmp_sprite->Sprite_card = Sprite::create(NumberToFilename(player1._deck->_card[i]));
+	}
+	sprite_vec.clear();
+}
