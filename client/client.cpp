@@ -90,6 +90,7 @@ client::client()
 	addrServer.sin_port = htons(6000); // 连接端口6000
 	// 让 sockClient 连接到 服务端
 	connect(sockClient, (SOCKADDR *)&addrServer, sizeof(SOCKADDR)); // 从服务端获取数据
+	recv(sockClient, recvBuf, 100, 0);
 }
 
 int client::start_game()
@@ -168,6 +169,38 @@ void client::win(int n)
 	free(message);
 }
 
+void client::login(string usrn, string pswd, int n)
+{
+	string str = "";
+	if (n == 1)
+		str = "9/";
+	else
+		str = "a/";
+	str += usrn;
+	str += "/";
+	str += pswd;
+	str += "/";
+	char* message = (char*) malloc(sizeof(char) * 100);
+	strcpy_s(message,100,str.c_str());
+	send(sockClient, message, strlen(message) + 1, 0);
+	free(message);
+}
+
+bool client::check_login()
+{
+	char* message = (char*) malloc(sizeof(char) * 100);
+	do
+	{
+	recv(sockClient, message, 100, 0);
+	}
+	while (message[0] != '9');
+	vector<int> vi = torecv(message);
+	free(message);
+	if (vi[0] == 9 && vi[1] == 1)
+		return true;
+	else
+		return false;
+}
 
 vector<int> client::opponent_turn()
 {
