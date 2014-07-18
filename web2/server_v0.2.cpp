@@ -33,11 +33,11 @@ struct mypara
 };
 
 
-bool SearchID(char *ID,char * Filename)
+bool SearchUser(char *ID,char * Filename)
 {
- char ch[200];
- bool judge=false;
-  ifstream in(Filename);
+	char ch[200];
+	bool judge=false;
+	ifstream in(Filename);
   while(in.getline(ch,200))
   {
    if(strstr(ch,ID)!=NULL)
@@ -52,6 +52,35 @@ bool SearchID(char *ID,char * Filename)
   in.close();
   return judge;
 }
+
+bool SearchID(char *ID,char *Filename)
+{
+	char ch[200];
+	char id[200];
+	bool judge=false;
+	 fstream in;
+	in.open(Filename,ios::out|ios::app);
+
+	ID++;ID++;
+	for(int i=0; *ID != '/';ID++)
+		id[i] = *ID;
+
+  while(in.getline(ch,200))
+  {
+   if(strstr(ch,id)!=NULL)
+   {
+    judge=true;
+    printf("%s\n",ch);
+	in<<ID<<endl;
+	break;
+   }
+  }
+  if(!judge)
+   printf("ID exist!");
+  in.close();
+  return judge;
+}
+
 
 void* start_game(void* arg)
 {
@@ -154,11 +183,22 @@ void* login(void* arg)
 	while (1)
 	{
 		if (recv(client, recvBuf, 100, 0) > 0 && recvBuf[0] == '9')
+		{
+			send(client,"9/2/",5,0);
 			break;
+		}
+		if (recv(client, recvBuf, 100, 0) > 0 && recvBuf[0] == 'a')
+			{
+				recvBuf[0] = '9';
+				if(SearchID(recvBuf,"user.log"))
+					send(client,"a/1/",5,0);
+				else
+					send(client,"a/2/",5,0);
+			}
 	}
 	printf("recv:%s\n",recvBuf);
 
-	if( SearchID(recvBuf,"user.log"))  
+	if( SearchUser(recvBuf,"user.log"))  
 	{
 		//login successfully
 		char* buf = "9/1/";
