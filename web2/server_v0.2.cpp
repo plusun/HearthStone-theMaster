@@ -32,6 +32,16 @@ struct mypara
 	mypara(SOCKET p1,SOCKET p2):para1(p1),para2(p2){};
 };
 
+char* get_username(char* str)
+{
+	char id[100];
+	str++;str++;
+	int i;
+	for(i = 0; *str != '/' ; str++)
+		id[i] = *str;
+	id[i+1]='\0';
+	return id;
+}
 
 bool SearchUser(char *ID,char * Filename)
 {
@@ -55,30 +65,29 @@ bool SearchUser(char *ID,char * Filename)
 
 bool SearchID(char *ID,char *Filename)
 {
-	char ch[200];
-	char id[200];
-	bool judge=false;
+	bool judge = false;
 	 fstream in;
-	in.open(Filename,ios::out|ios::app);
+	in.open(Filename,ios::in|ios::out|ios::app);
 
-	ID++;ID++;
-	for(int i=0; *ID != '/';ID++)
-		id[i] = *ID;
-
-  while(in.getline(ch,200))
-  {
-   if(strstr(ch,id)!=NULL)
-   {
-    judge=true;
-    printf("%s\n",ch);
-	in<<ID<<endl;
-	break;
-   }
-  }
-  if(!judge)
-   printf("ID exist!");
-  in.close();
-  return judge;
+	char* id = get_username(ID);
+	char* ch = (char*)malloc(sizeof(char)*100);;
+	while(in.getline(ch,100))
+	{
+		if(strcmp(get_username(ch),id) == 0)			//find exist username
+		{
+			judge = true;
+			printf("%s\n",ch);
+			break;
+		}
+	}
+	if(judge)
+		printf("ID exist!");
+	else
+	{
+		in << ID << endl;
+	}
+	in.close();
+	return judge;
 }
 
 
@@ -182,18 +191,19 @@ void* login(void* arg)
 	char recvBuf[100];
 	while (1)
 	{
-		if (recv(client, recvBuf, 100, 0) > 0 && recvBuf[0] == '9')
-		{
-			send(client,"9/2/",5,0);
+
+		if (recv(client, recvBuf, 100, 0) <= 0)
+			continue;
+		if (recvBuf[0] == '9')
 			break;
-		}
-		if (recv(client, recvBuf, 100, 0) > 0 && recvBuf[0] == 'a')
+		if (recvBuf[0] == 'a')
 			{
 				recvBuf[0] = '9';
-				if(SearchID(recvBuf,"user.log"))
-					send(client,"a/1/",5,0);
+				if(!SearchID(recvBuf,"user.log"))
+					send(client,"9/1/",5,0);
 				else
-					send(client,"a/2/",5,0);
+					send(client,"9/2/",5,0);
+				break;
 			}
 	}
 	printf("recv:%s\n",recvBuf);
