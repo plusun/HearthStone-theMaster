@@ -97,6 +97,7 @@ bool SearchID(char *ID,char *Filename)
 		in2.sync();
 		in2.flush();
 		in2.close();
+
 	}
 
 
@@ -201,45 +202,55 @@ void* login(void* arg)
 	sprintf_s(sendBuf, "欢迎用户连接, 这里是 HearthStone 的服务器\n"); // 向客户端发送字符串
 	send(client, sendBuf, strlen(sendBuf) + 1, 0); // 获取客户端返回的数据
 
-	char recvBuf[100];
 	while (1)
 	{
 
-		if (recv(client, recvBuf, 100, 0) <= 0)
-			continue;
-		if (recvBuf[0] == '9')
-			break;
-		if (recvBuf[0] == 'a')
-			{
-				recvBuf[0] = '9';
-				if(!SearchID(recvBuf,"user.log"))
-				{
-					break;
-				}
-				else
-				{
-					send(client,"9/2/",5,0);
-					continue;
-				}
-			}
-	}
-	printf("recv:%s\n",recvBuf);
-
-	if( SearchUser(recvBuf,"user.log"))  
-	{
-		//login successfully
-		char* buf = "9/1/";
-		send(client, buf, 10, 0);
+		char recvBuf[100];
 		while (1)
 		{
-			if (recv(client, recvBuf, 100, 0) <= 0 || recvBuf[0] != '3')
+
+			if (recv(client, recvBuf, 100, 0) <= 0)
 				continue;
-			//std::unique_lock <std::mutex> lck(mtx);
-			vs.push_back(client);
-			//ready = true;
-			//cv.notify_all();
-			return NULL;
+			if (recvBuf[0] == '9')
+				break;
+			if (recvBuf[0] == 'a')
+				{
+					recvBuf[0] = '9';
+					if(!SearchID(recvBuf,"user.log"))
+					{
+						//send(client,"9/1/",5,0);
+						break;
+					}
+					else
+					{
+						send(client,"9/2/",5,0);
+						continue;
+					}
+				}
 		}
+		printf("recv:%s\n",recvBuf);
+
+		if( SearchUser(recvBuf,"user.log"))  
+		{
+			//login successfully
+			send(client, "9/1/", 5, 0);
+			while (1)
+			{
+				if (recv(client, recvBuf, 100, 0) <= 0 || recvBuf[0] != '3')
+					continue;
+				//std::unique_lock <std::mutex> lck(mtx);
+				vs.push_back(client);
+				//ready = true;
+				//cv.notify_all();
+				return NULL;
+			}
+		}
+		else
+		{
+			send(client,"9/2/",5,0);
+			continue;
+		}
+
 	}
 }
 
