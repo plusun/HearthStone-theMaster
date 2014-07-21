@@ -24,6 +24,7 @@ pthread_t tid2;
 pthread_t tid3;
 pthread_mutex_t mutex; 
 pthread_mutex_t wmutex;
+pthread_cond_t cond;
 
 struct mypara 
 { 
@@ -45,6 +46,7 @@ char* get_username(char* str)
 
 bool SearchUser(char *ID,char * Filename)
 {
+	pthread_mutex_lock(&wmutex);
 	char ch[200];
 	bool judge=false;
 	fstream in;
@@ -61,11 +63,13 @@ bool SearchUser(char *ID,char * Filename)
   if(!judge)
    printf("Wrong ID or PSW");
   in.close();
+  pthread_mutex_unlock(&wmutex);
   return judge;
 }
 
 bool SearchID(char *ID,char *Filename)
 {
+	pthread_mutex_lock(&wmutex);
 	bool judge = false;
 	fstream in;
 	in.open(Filename,ios::in|ios::out|ios::app);
@@ -100,7 +104,7 @@ bool SearchID(char *ID,char *Filename)
 
 	}
 
-
+	pthread_mutex_unlock(&wmutex);
 	return judge;
 }
 
@@ -178,9 +182,8 @@ void* find_game(void* arg)
 	while (1)
 	{
 		pthread_mutex_lock(&mutex);
-		//unique_lock <mutex> lck(mtx);
-		//while (!ready) cv.wait(lck);
-		//ready = false;
+		pthread_cond_wait(&cond, &mutex);
+
 		while (vs.size() >= 2)
 		{
 			SOCKET s1 = vs[0];
@@ -238,10 +241,8 @@ void* login(void* arg)
 			{
 				if (recv(client, recvBuf, 100, 0) <= 0 || recvBuf[0] != '3')
 					continue;
-				//std::unique_lock <std::mutex> lck(mtx);
+				pthread_cond_signal(&cond); 
 				vs.push_back(client);
-				//ready = true;
-				//cv.notify_all();
 				return NULL;
 			}
 		}
@@ -253,15 +254,6 @@ void* login(void* arg)
 
 	}
 }
-
-void _accept(SOCKET sockServer)
-{
-	int len;
-	SOCKET sockClient;
-	SOCKADDR_IN addrClient;
-
-}
-
 
 int main()
 {
@@ -306,20 +298,14 @@ int main()
 
 	pthread_mutex_init(&mutex, NULL); 
 	pthread_mutex_init(&wmutex, NULL); 
-	
+	pthread_cond_init(&cond, NULL);
+
 	pthread_create(&tid1, NULL, find_game, NULL); 
-	//std::thread t1(find_game);
-	//t1.detach();
-	//
-	//std::thread t2(_accept,sockServer);
-	//t2.detach();
 
 	while (1)
 	{
 		// accept 会阻塞进程，直到有客户端连接上来为止
 		sockClient = accept(sockServer, (SOCKADDR *)&addrClient, &len); // 当客户端连接上来时, 拼接如下字符串
-		//printf("%d",WSAGetLastError());
-		//printf("%d",sockClient);
 		if (sockClient != -1) 
 		{
 			pthread_create(&tid2, NULL, login, (void*)sockClient); 
