@@ -25,6 +25,7 @@ pthread_t tid3;
 pthread_mutex_t mutex; 
 pthread_mutex_t wmutex;
 pthread_cond_t cond;
+pthread_attr_t a;
 
 struct mypara 
 { 
@@ -56,12 +57,12 @@ bool SearchUser(char *ID,char * Filename)
    if(strstr(ch,ID)!=NULL)
    {
     judge=true;
-    printf("%s\n",ch);
+    std::printf("%s\n",ch);
 	break;
    }
   }
   if(!judge)
-   printf("Wrong ID or PSW");
+   std::printf("Wrong ID or PSW");
   in.close();
   pthread_mutex_unlock(&wmutex);
   return judge;
@@ -84,7 +85,7 @@ bool SearchID(char *ID,char *Filename)
 		if(strcmp(id,ch) == 0)			//find exist username
 		{
 			judge = true;
-			printf("%s\n",ch);
+			std::printf("%s\n",ch);
 			break;
 		}
 	}
@@ -92,7 +93,7 @@ bool SearchID(char *ID,char *Filename)
 	in.flush();
 	in.close();
 	if(judge)
-		printf("ID exist!");
+		std::printf("ID exist!");
 	else
 	{
 		fstream in2;
@@ -128,8 +129,12 @@ void* start_game(void* arg)
 			while(1)
 			{
 				if(recv(sockClient1, recvBuf1, 100, 0)<=0)
+				{
+					if (WSAGetLastError() == WSAECONNRESET)
+						return NULL;
 					continue;
-					printf("C1:%s\n",recvBuf1);
+				}
+				std::printf("C1:%s\n",recvBuf1);
 					//fout<<"C1:"<<recvBuf1<<"\n";
 				if(recvBuf1[0] == '6')
 				{
@@ -152,8 +157,12 @@ void* start_game(void* arg)
 			while(1)
 			{
 				if(recv(sockClient2, recvBuf2, 100, 0)<=0)
+				{
+					if (WSAGetLastError() == WSAECONNRESET)
+						return NULL;
 					continue;
-				printf("C2:%s\n",recvBuf2);
+				}
+				std::printf("C2:%s\n",recvBuf2);
 				//fout<<"C2:"<<recvBuf2<<"\n";
 				if(recvBuf2[0] == '6')
 				{
@@ -190,7 +199,7 @@ void* find_game(void* arg)
 			SOCKET s2 = vs[1];
 			vs.erase(vs.begin());
 			vs.erase(vs.begin());
-			pthread_create(&tid3, NULL, start_game, &mypara(s1,s2)); 
+			pthread_create(&tid3, &a, start_game, &mypara(s1,s2)); 
 			//std::thread t0(start_game,s1,s2);
 		}
 		pthread_mutex_unlock(&mutex);
@@ -211,9 +220,13 @@ void* login(void* arg)
 		char recvBuf[100];
 		while (1)
 		{
-
-			if (recv(client, recvBuf, 100, 0) <= 0)
+			if (recv(client, recvBuf, 100, 0) < 0)
+			{
+				if (WSAGetLastError() == WSAECONNRESET)
+					return NULL;
 				continue;
+			}
+
 			if (recvBuf[0] == '9')
 				break;
 			if (recvBuf[0] == 'a')
@@ -231,7 +244,7 @@ void* login(void* arg)
 					}
 				}
 		}
-		printf("recv:%s\n",recvBuf);
+		std::printf("recv:%s\n",recvBuf);
 
 		if( SearchUser(recvBuf,"user.log"))  
 		{
@@ -239,8 +252,12 @@ void* login(void* arg)
 			send(client, "9/1/", 5, 0);
 			while (1)
 			{
-				if (recv(client, recvBuf, 100, 0) <= 0 || recvBuf[0] != '3')
+				if (recv(client, recvBuf, 100, 0) < 0 || recvBuf[0] != '3')
+				{
+					if (WSAGetLastError() == WSAECONNRESET)
+						return NULL;
 					continue;
+				}
 				pthread_cond_signal(&cond); 
 				vs.push_back(client);
 				return NULL;
@@ -293,14 +310,16 @@ int main()
 	// 将服务器端socket绑定在本地端口
 	bind(sockServer, (SOCKADDR *)&addrServer, sizeof(SOCKADDR)); // Listen 监听端
 	listen(sockServer, 10); // 5 为等待连接数目
-	printf("服务器已启动:\n监听中...\n");
+	std::printf("服务器已启动:\n监听中...\n");
 	len = sizeof(SOCKADDR);
 
 	pthread_mutex_init(&mutex, NULL); 
 	pthread_mutex_init(&wmutex, NULL); 
 	pthread_cond_init(&cond, NULL);
+	pthread_attr_init(&a);  //初始化线程属性
+	pthread_attr_setdetachstate(&a, PTHREAD_CREATE_DETACHED);      //设置线程属性
 
-	pthread_create(&tid1, NULL, find_game, NULL); 
+	pthread_create(&tid1, &a, find_game, NULL); 
 
 	while (1)
 	{
@@ -308,7 +327,7 @@ int main()
 		sockClient = accept(sockServer, (SOCKADDR *)&addrClient, &len); // 当客户端连接上来时, 拼接如下字符串
 		if (sockClient != -1) 
 		{
-			pthread_create(&tid2, NULL, login, (void*)sockClient); 
+			pthread_create(&tid2, &a, login, (void*)sockClient); 
 		}
 	}
 

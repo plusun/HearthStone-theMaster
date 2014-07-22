@@ -39,9 +39,10 @@ int main()
 		send(sockClient, message, strlen(message) + 1, 0); // ¹Ø±Õsocket
 		printf("send: %s\n", message);
 
-		if(message[0] == '9' && recv(sockClient, recvBuf, 100, 0)>0)
+		if((message[0] == '9' || message[0] == 'a') && recv(sockClient, recvBuf, 100, 0)>0)
 			break;
 	}
+	printf("received: %s\n",recvBuf);
 	while(1)
 	{
 		scanf_s("%s",message,100);
