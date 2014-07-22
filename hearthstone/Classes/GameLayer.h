@@ -5,12 +5,14 @@
 #include "cocos-ext.h"
 #include "logic/player.h"
 #include "logic/client.h"
-#include "PopLayer.h"
 
 using namespace std;
 
 USING_NS_CC;
 USING_NS_CC_EXT; 
+
+extern client cl;
+extern bool Is_First;
 
 class GameLayer : public cocos2d::Layer
 {
@@ -28,8 +30,10 @@ public:
 	deck *d1, *d2;
 	Player player1;
 	Player player2;
-	client cl;
+	static bool is_first_turn;
+
 	vector<Card * >sprite_vec;
+	vector<MinionCard *>minion_vec;
 	static int operator_position;
 	static int battlefield_position;
 
@@ -44,11 +48,16 @@ public:
 	bool b_add_touchListener(Player *,int ,int *,int *, int);
 	bool h_add_touchListener(Player *,int *,int *, int);
 	static void wait_message(GameLayer *,Player * , Player *);
+	Minion * find_minion(int);
 	void init_img();
 	
 	virtual bool onTouchBegan(Touch *touch, Event *unused_event); 
     virtual void onTouchMoved(Touch *touch, Event *unused_event); 
     virtual void onTouchEnded(Touch *touch, Event *unused_event); 
+
+	virtual bool b_onTouchBegan(Touch *touch, Event *unused_event); 
+    virtual void b_onTouchMoved(Touch *touch, Event *unused_event); 
+    virtual void b_onTouchEnded(Touch *touch, Event *unused_event); 
 
 private:
 	

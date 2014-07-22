@@ -2,6 +2,8 @@
 
 USING_NS_CC;
 
+bool Is_First;
+
 Scene* LoginScene::createScene()
 {
     // 'scene' is an autorelease object
@@ -41,7 +43,7 @@ bool LoginScene::init()
 	//button
 
 	//login button 
-	auto LoginMenuItem=MenuItemImage::create("denglu.png","denglu.png",CC_CALLBACK_1(LoginScene::LoginMenuCallback,this));
+	auto LoginMenuItem=MenuItemImage::create("game.png","game.png",CC_CALLBACK_1(LoginScene::GameMenuCallback,this));
 	LoginMenuItem->setPosition(Point(winSize.width / 2, winSize.height / 2-135));
 	auto starMenu=Menu::create(LoginMenuItem,NULL);
 	starMenu->setPosition(Point::ZERO); //menu锚点默认为（0,0），此时把menu位置也设为(0,0)，所以menu的左下角位于屏幕的左下角
@@ -68,8 +70,9 @@ bool LoginScene::init()
 }
 
 //callback -- login
-void LoginScene::LoginMenuCallback(Object* pSender)
+void LoginScene::GameMenuCallback(Object* pSender)
 {
+	Is_First = cl.start_game();
 	CCTransitionScene * reScene = NULL;
 	CCScene * s = GameLayer::createScene();
     float t = 1.2f;

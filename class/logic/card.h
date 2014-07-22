@@ -32,7 +32,7 @@ public:
     _cost = new_cost;
   }
 
-  Sprite * Sprite_card;
+  Sprite * Sprite_card ;
 };
 
 class MinionCard: public Card

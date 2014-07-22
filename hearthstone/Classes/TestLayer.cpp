@@ -1,5 +1,7 @@
 #include "TestLayer.h"
 
+client cl;
+
 Scene* TestLayer::createScene()
 {
     // 'scene' is an autorelease object
@@ -43,8 +45,8 @@ bool TestLayer::init()
 		CCSize visibleSize=CCDirector::sharedDirector()->getVisibleSize();
 
 		uEditBox = EditBox::create(CCSizeMake(200,40), Scale9Sprite::create("login_edit_normal.9.png"));
-		uEditBox->setPosition(ccp(visibleSize.width/2, visibleSize.height*3/4));
-		uEditBox->setFontColor(ccRED);
+		uEditBox->setPosition(ccp(visibleSize.width/2, visibleSize.height*3/5));
+		uEditBox->setFontColor(ccBLACK);
 		uEditBox->setPlaceHolder("username:");
 		uEditBox->setMaxLength(8);
 		uEditBox->setInputFlag(EditBox::InputFlag::SENSITIVE);
@@ -55,8 +57,8 @@ bool TestLayer::init()
 
 
 		pEditBox = EditBox::create(CCSizeMake(200,40), Scale9Sprite::create("login_edit_normal.9.png"));
-		pEditBox->setPosition(ccp(visibleSize.width/2, visibleSize.height/2));
-		pEditBox->setFontColor(ccRED);
+		pEditBox->setPosition(ccp(visibleSize.width/2, visibleSize.height*2/5));
+		pEditBox->setFontColor(ccBLACK);
 		pEditBox->setPlaceHolder("password:");
 		pEditBox->setMaxLength(8);
 		
@@ -108,19 +110,19 @@ bool TestLayer::init()
 
 void TestLayer::editBoxEditingDidBegin(EditBox *editBox)
 {
-	CCLOG("start edit");
+	//CCLOG("start edit");
 }
 void TestLayer::editBoxEditingDidEnd(EditBox *editBox)
 {
-	CCLOG("end edit");
+	//CCLOG("end edit");
 }
 void TestLayer::editBoxReturn(EditBox *editBox)
 {
-	CCLOG("editbox return");
+	//CCLOG("editbox return");
 }
 void TestLayer::editBoxTextChanged(EditBox *editBox, const std::string &text)
 {
-	CCLOG("text changed");
+	//CCLOG("text changed");
 }
 
 void TestLayer::btncallback1( CCObject* pSender )
@@ -130,6 +132,23 @@ void TestLayer::btncallback1( CCObject* pSender )
 	//TODO
 	string tmp1 = uEditBox->getText();
 	string tmp2 = pEditBox->getText();
+	cl.login(tmp1,tmp2,1);
+	if (cl.check_login())
+	{
+		CCTransitionScene * reScene = NULL;
+		CCScene * s = LoginScene::createScene();
+		float t = 1.2f;
+		reScene = CCTransitionProgressRadialCW::create(t , s);
+		CCDirector::sharedDirector()->replaceScene(reScene);
+	}
+	else
+	{
+		PopScene* popLayer = PopScene::create();
+		this->addChild(popLayer);
+	
+		return;//TODO: report error
+	}
+	
 }
 
 void TestLayer::btncallback2( CCObject* pSender )
@@ -137,4 +156,22 @@ void TestLayer::btncallback2( CCObject* pSender )
 	//register
 	CCLOG("%s,%s",uEditBox->getText(),pEditBox->getText());
 	//TODO
+	string tmp1 = uEditBox->getText();
+	string tmp2 = pEditBox->getText();
+	cl.login(tmp1,tmp2,2);
+	if (cl.check_login())
+	{
+		CCTransitionScene * reScene = NULL;
+		CCScene * s = LoginScene::createScene();
+		float t = 1.2f;
+		reScene = CCTransitionProgressRadialCW::create(t , s);
+		CCDirector::sharedDirector()->replaceScene(reScene);
+	}
+	else
+	{
+		PopScene* popLayer = PopScene::create();
+		this->addChild(popLayer);
+	
+		return;//TODO: report error
+	}
 }

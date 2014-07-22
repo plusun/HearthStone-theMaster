@@ -13,12 +13,13 @@ Card *NumberToCard(int no)
       switch (no)
 	{
 	case 1:
-	  card = new MinionCard(1, NULL);
+	  card = new MinionCard(0, NULL);
 	  card->minion(new Wisp());
 	  break;
 	case 2:
 	  card = new MinionCard(2, NULL);
 	  card->minion(new BloodfenRaptor());
+	  break;
 	case 3:
 	  card = new MinionCard(2, NULL);
 	  card->minion(new Amani());

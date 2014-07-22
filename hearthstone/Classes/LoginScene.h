@@ -9,6 +9,9 @@
 USING_NS_CC;
 USING_NS_CC_EXT; 
 
+extern client cl;
+extern bool Is_First;
+
 class LoginScene : public cocos2d::Layer
 {
 public:
@@ -17,7 +20,7 @@ public:
 	static cocos2d::Scene* createScene();
 	CREATE_FUNC(LoginScene);
 
-	void LoginMenuCallback(Object* pSender);
+	void GameMenuCallback(Object* pSender);
 	void exitMenuCallback(Object* pSender);
 	void cardMenuCallback(Object* pSender);
 private:

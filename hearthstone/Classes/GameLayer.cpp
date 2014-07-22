@@ -10,6 +10,7 @@ USING_NS_CC;
 
 int GameLayer::operator_position = 0;
 int GameLayer::battlefield_position  = 0;
+bool GameLayer::is_first_turn = true;
 
 Scene* GameLayer::createScene()
 {
@@ -39,10 +40,10 @@ bool GameLayer::init()
 
 	/*init player*/
 	init_img();
-	player1.is_first = cl.start_game();
+	player1.is_first = Is_First;
 	player1.init();
-	player2.init();
-
+	//player2.init();
+	is_first_turn = !Is_First;
 
 	/* background */
 	Sprite* bgSp = Sprite::create("gamelayer.png");
@@ -87,6 +88,7 @@ bool GameLayer::init()
 	if(player1.is_first)
 	{
 		player1.turn();
+		player1.draw();
 
 		/* init the handcard */
 		for(int i = 0 ; i < player1._handcard._card.size(); i++)
@@ -115,22 +117,14 @@ bool GameLayer::init()
 		for(int i  = 0 ; i < player1._handcard._card.size() ; i++)
 		{
 			cl.draw_card(player1._handcard._card[i]);
-			Sleep(1000);
+			Sleep(200);
 		}
 	}
 	else
 	{
-		player2.turn();
-		player2.turn();
-		player2.turn();
-		player2.turn();
-		player2.turn();
-		player2.turn();
-		player2.turn();
-		player2.turn();
-		player2.turn();
-
 		/* init the handcard */
+		player2.turn();
+		setTouchEnabled(false);
 		for(int i = 0 ; i < player1._handcard._card.size(); i++)
 		{
 			Card* tmp_sprite = NumberToCard(player1._handcard._card[i]);
@@ -220,10 +214,12 @@ int GameLayer::update_battlefiled(Player * p1 ,int side ,int * operator_position
 		}
 		
 		/* add new minion the battlefield */
+		
+		//p1->_battlefield->_minion[side][tmp_pos] = find_minion(p1->_battlefield->_minion[side][tmp_pos]->no);
 		string str = CharacterToFilename(p1->_battlefield->_minion[side][tmp_pos]);
 		p1->_battlefield->_minion[side][tmp_pos]->Sprite_card = Sprite::create(str,Rect(0,0,90,128));
 		Point p = Point(60 + SPACING * tmp_pos + 45 , side * 200 + 140 + 64 );
-		p1->_battlefield->_minion[side][tmp_pos]->Sprite_card->setPosition(p);
+		p1->_battlefield->_minion[side][tmp_pos]->Sprite_card->setPosition(Point(60 + SPACING * tmp_pos + 45 , side * 200 + 140 + 64 ));
 		this->addChild(p1->_battlefield->_minion[side][tmp_pos]->Sprite_card);
 		b_add_touchListener(p1 ,side , operator_position , battlefield_position , tmp_pos);
 		
@@ -237,8 +233,8 @@ int GameLayer::update_battlefiled(Player * p1 ,int side ,int * operator_position
 
 		return tmp_pos;
 }
-/* 更新手牌的信息 */
 
+/* 更新手牌的信息 */
 void GameLayer:: update_handcard(Player* p1 ,int num)
 {
 	int size_card = p1->_handcard._card.size();
@@ -258,10 +254,10 @@ void GameLayer:: update_handcard(Player* p1 ,int num)
 bool GameLayer:: b_add_touchListener(Player * p1,int side , int * operator_pos ,int * battlefield_pos ,int tmp_pos)
 {
 	auto touchListener = EventListenerTouchOneByOne::create();
-	touchListener->setSwallowTouches(false);
-	touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
-	touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
-	touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
+	touchListener->setSwallowTouches(true);
+	touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::b_onTouchBegan, this);
+	touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::b_onTouchMoved, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::b_onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener,  p1->_battlefield->_minion[side][tmp_pos]->Sprite_card);
 	return true;
 }
@@ -270,7 +266,7 @@ bool GameLayer:: b_add_touchListener(Player * p1,int side , int * operator_pos ,
 bool GameLayer:: h_add_touchListener(Player * p1, int * operator_pos ,int * battlefield_pos ,int tmp_pos)
 {
 	auto touchListener = EventListenerTouchOneByOne::create();
-	touchListener->setSwallowTouches(false);
+	touchListener->setSwallowTouches(true);
 	touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
 	touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
 	touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
@@ -278,15 +274,12 @@ bool GameLayer:: h_add_touchListener(Player * p1, int * operator_pos ,int * batt
 	return true;
 }
 
-
 void GameLayer::timeCallback(float c)
 {
 	//wait_message(&player1, &player2);
 }
 
-
-
- bool GameLayer:: onTouchBegan(Touch *touch, Event *event)
+bool GameLayer::onTouchBegan(Touch *touch, Event *event)
 {
 	auto target = static_cast<Sprite*>(event->getCurrentTarget());
 	Node * b=  event->getCurrentTarget();
@@ -296,7 +289,7 @@ void GameLayer::timeCallback(float c)
 	Size s = target->getContentSize();
 	Rect rect = Rect(0, 0, s.width, s.height);
 	/* Limited range of touch */
-	if(touch->getLocation().y < 540)
+	if(touch->getLocation().y < 140)
 	{
 		/* get the position of the card that we are operatoring*/
 		if(((int) touch->getLocation().x % 100) > 60 || ( ( (int)(touch->getLocation()).x % 100 ) <40 ))
@@ -313,13 +306,13 @@ void GameLayer::timeCallback(float c)
 	return false;
 };
 
-void  GameLayer:: onTouchMoved(Touch *touch, Event *event)
+void  GameLayer::onTouchMoved(Touch *touch, Event *event)
 {
 		auto target = static_cast<Sprite*>(event->getCurrentTarget());
 		target->setPosition(target->getPosition() + touch->getDelta());
 }; 
 
-void GameLayer:: onTouchEnded(Touch *touch, Event *event)
+void GameLayer::onTouchEnded(Touch *touch, Event *event)
 {
 		auto target = static_cast<Sprite*>(event->getCurrentTarget());
 		Point locationInNode = touch->getLocation();
@@ -383,7 +376,105 @@ void GameLayer:: onTouchEnded(Touch *touch, Event *event)
 		}
 }; 
 
-void GameLayer:: wait_message(GameLayer * g,Player * player1 , Player * player2)
+bool GameLayer::b_onTouchBegan(Touch *touch, Event *event)
+{
+	auto target = static_cast<Sprite*>(event->getCurrentTarget());
+	Node * b=  event->getCurrentTarget();
+	Point a = target->getPosition();
+	Point touchPoint  =  touch->getLocation();
+	Point locationInNode = target->convertToNodeSpace(touchPoint);
+	Size s = target->getContentSize();
+	Rect rect = Rect(0, 0, s.width, s.height);
+	/* Limited range of touch */
+	double x = touch->getLocation().y ;
+	if(  200 < touch->getLocation().y < 280)
+	{
+		/* get the position of the card that we are operatoring*/
+		if(((int) touch->getLocation().x % 100) > 60 || ( ( (int)(touch->getLocation()).x % 100 ) <40 ))
+			{
+				int tmp = ( touch->getLocation().x - 40 ) / 100;
+				operator_position = tmp;
+			}
+	    if (rect.containsPoint(locationInNode))
+			{
+				target->setOpacity(180);
+				return true;
+			}
+	}
+	return false;
+};
+
+void  GameLayer::b_onTouchMoved(Touch *touch, Event *event)
+{
+		auto target = static_cast<Sprite*>(event->getCurrentTarget());
+		target->setPosition(target->getPosition() + touch->getDelta());
+}; 
+
+void GameLayer::b_onTouchEnded(Touch *touch, Event *event)
+{
+		auto target = static_cast<Sprite*>(event->getCurrentTarget());
+		Point locationInNode = touch->getLocation();
+
+		Rect rect1 = Rect(60,140,90,128);
+		Rect rect2 = Rect(160,140,90,128);
+		Rect rect3 = Rect(260,140,90,128);
+		Rect rect4 = Rect(360,140,90,128);
+		Rect rect5 = Rect(460,140,90,128);
+		Rect rect6 = Rect(560,140,90,128);
+		bool f = true;
+
+		/* ugly code */
+		if (rect1.containsPoint(locationInNode))
+		{
+			target->setOpacity(255);
+			target->setPosition(60+45,140+64);
+			battlefield_position = 0;
+			
+			
+		}
+		else if(rect2.containsPoint(locationInNode))
+		{
+			target->setOpacity(255);
+			target->setPosition(160+45,140+64);
+			battlefield_position = 1;
+			
+		}
+		else if(rect3.containsPoint(locationInNode))
+		{
+			target->setOpacity(255);
+			target->setPosition(260+45,140+64);
+			battlefield_position = 2;
+		}
+		else if(rect4.containsPoint(locationInNode))
+		{
+			target->setOpacity(255);
+			target->setPosition(360+45,140+64);
+			battlefield_position = 3;
+			
+		}
+		else if(rect5.containsPoint(locationInNode))
+		{
+			target->setOpacity(255);
+			target->setPosition(460+45,140+64);
+			battlefield_position = 4;
+			
+		}
+		else if(rect6.containsPoint(locationInNode))
+		{
+			target->setOpacity(255);
+			target->setPosition(560+45,140+64);
+			battlefield_position = 5;
+			
+		}
+		else
+		{
+			target->setOpacity(255);
+			target->setPosition(Point(SPACING + SPACING * (operator_position) , 140 + 64));
+			f = false;
+		}
+}; 
+
+void GameLayer::wait_message(GameLayer * g,Player * player1 , Player * player2)
 {
 
 	int _card_position;
@@ -395,7 +486,7 @@ void GameLayer:: wait_message(GameLayer * g,Player * player1 , Player * player2)
 	int _card;
 	while (1)
 	{
-		vector<int> vi = g->cl.opponent_turn();
+		vector<int> vi = cl.opponent_turn();
 		switch (vi[0])
 		{
 			case 6:
@@ -412,7 +503,19 @@ void GameLayer:: wait_message(GameLayer * g,Player * player1 , Player * player2)
 				g->setTouchEnabled(true);
 				player2->over();
 				player1->turn();
+				player1->draw();
 				g->update_handcard(player1 , 1);
+				if (is_first_turn)
+				{
+					is_first_turn = false;
+					for(int i  = 0 ; i < player1->_handcard._card.size() ; i++)
+					{
+						cl.draw_card(player1->_handcard._card[i]);
+						Sleep(200);
+					}
+				}
+				else
+					cl.draw_card(player1->_handcard._card[player1->_handcard._card.size()-1]);
 				return;
 			case 1:
 				_card_position = vi[1];
@@ -439,6 +542,7 @@ void GameLayer:: wait_message(GameLayer * g,Player * player1 , Player * player2)
 		
 	}
 }
+
 void GameLayer::init_img()
 {
 	for(int i = 0 ; i < player1._deck->_amount; i++ )
@@ -448,4 +552,63 @@ void GameLayer::init_img()
 		tmp_sprite->Sprite_card = Sprite::create(NumberToFilename(player1._deck->_card[i]));
 	}
 	sprite_vec.clear();
+	/*
+	for(int j = 1; j <= MAXCARDNO; j++)
+	{
+		for(int k = 0 ; k < 30 ; k++)
+		{
+			MinionCard* tmp_sprite =(MinionCard *) NumberToCard(j);
+			tmp_sprite->_minion->Sprite_card= Sprite::create(CharacterToFilename(tmp_sprite->_minion));
+			minion_vec.push_back(tmp_sprite);
+		}
+	}
+	*/
+	
+	int m = 0;
+	for(int k = 0 ; k < 9 ; k++)
+	{
+		player2.turn();
+		player2.draw();
+	}
+		for(int  j = 0 ; j < 30 ; j++)
+	{
+		player2.turn();
+		player2.draw();
+		if(player2.use(0,j))
+		{
+			string str = CharacterToFilename(player2._battlefield->_minion[1][j]);
+			Sprite * Sprite_card = Sprite::create(CharacterToFilename(player2._battlefield->_minion[1][j])); 
+			if(player2._battlefield->_minion[1].size() == 10)
+			{
+				player2._battlefield->_minion[1].clear();
+				j = -1;
+			}
+			m++;
+		}
+		if(m == 30)
+		{
+			player2._battlefield->_minion[1].clear();
+			player2._deck->_amount =30;
+			player2._handcard._card.clear();
+			player2._mana._max_mana = 0;
+			player2._mana._cur_mana = 0;
+			break;
+		}
+	}
+}
+
+Minion * GameLayer::find_minion(int no)
+{
+	Minion * tmp_minion ;
+	for(int i = 0 ; i < minion_vec.size() ; i++)
+	{
+		if(no == minion_vec[i]->_minion->no)
+		{
+			tmp_minion = minion_vec[i]->_minion;
+			minion_vec.erase(minion_vec.begin() + i);
+			return tmp_minion;
+		}
+
+	}
+	return NULL;
 }

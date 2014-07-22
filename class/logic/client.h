@@ -1,3 +1,5 @@
+#ifndef __CLIENT_H__
+#define __CLIENT_H__
 #include <cstdlib>
 #include <vector>
 #include <Winsock2.h>
@@ -23,5 +25,8 @@ public:
 	void attack(int a, int b);
 	void end_turn();
 	void win(int n = 1);
+	void login(string usrn, string pswd, int n);
+	bool check_login();
 	vector<int> opponent_turn();
 };
+#endif

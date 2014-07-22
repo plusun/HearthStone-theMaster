@@ -2,6 +2,9 @@
 #include "cocos2d.h"
 #include "cocos-ext.h"
 #include "string.h"
+#include "LoginScene.h"
+#include "PopLayer.h"
+#include "logic/client.h"
 
 using namespace std;
 

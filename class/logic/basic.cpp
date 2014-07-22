@@ -1,3 +1,5 @@
+#include "basic.h"
+
 string convertInt(int number)
 {
   std::stringstream ss;

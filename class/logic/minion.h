@@ -4,6 +4,8 @@
 #include "character.h"
 #include "spell.h"
 
+#define MAXMINION 14
+
 class Wisp: public Minion
 {
 public:

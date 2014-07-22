@@ -38,7 +38,7 @@ void Player::turn()
   if ( _mana._max_mana < 10 ) //max mana++ & restore mana
     _mana.inc_max_mana();
   _mana.restore_mana();
-  draw();
+  //draw();
 }
 
 void Player::over()
