@@ -36,6 +36,8 @@ public:
 	vector<MinionCard *>minion_vec;
 	static int operator_position;
 	static int battlefield_position;
+	static int minion1_position;
+	static int minion2_position;
 
 	static cocos2d::Scene* createScene();
 	CREATE_FUNC(GameLayer);
@@ -44,6 +46,8 @@ public:
 	void endMenuCallback(Object* pSender , Player * p1 ,Player * p2, int *,int *);
 	void timeCallback(float ct);
 	int update_battlefiled(Player* p1 ,int ,int * ,int *);
+	void update_battlefiled_all(bool);
+	void attack(int side, int m1, int m2);
 	void update_handcard(Player* p1 ,int );
 	bool b_add_touchListener(Player *,int ,int *,int *, int);
 	bool h_add_touchListener(Player *,int *,int *, int);

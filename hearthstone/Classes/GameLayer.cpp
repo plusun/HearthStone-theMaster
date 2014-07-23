@@ -11,6 +11,8 @@ USING_NS_CC;
 int GameLayer::operator_position = 0;
 int GameLayer::battlefield_position  = 0;
 bool GameLayer::is_first_turn = true;
+int GameLayer::minion1_position = 0;
+int GameLayer::minion2_position = 0;
 
 Scene* GameLayer::createScene()
 {
@@ -234,6 +236,41 @@ int GameLayer::update_battlefiled(Player * p1 ,int side ,int * operator_position
 		return tmp_pos;
 }
 
+
+/* 更新杀敌后战场全部最新信息 */
+void GameLayer::update_battlefiled_all(bool visible)
+{
+	for (int i = 0; i < player1._battlefield->_minion[0].size(); i++)
+	{
+		if (visible)
+		{
+			player1._battlefield->_minion[0][i]->Sprite_card->setOpacity(255);
+			player1._battlefield->_minion[0][i]->Sprite_card->setPosition(60+100*i+45,140+64);
+		}
+		else
+			player1._battlefield->_minion[0][i]->Sprite_card->setOpacity(0);
+	}
+	for (int i = 0; i < player2._battlefield->_minion[1].size(); i++)
+	{
+		if (visible)
+		{
+			player2._battlefield->_minion[1][i]->Sprite_card->setPosition(60+100*i+45,340+64);
+			player2._battlefield->_minion[1][i]->Sprite_card->setOpacity(255);
+		}
+		else
+			player2._battlefield->_minion[1][i]->Sprite_card->setOpacity(0);
+	}
+}
+
+/* side方m1进攻对方m2的后台和前台包装函数 */
+void GameLayer::attack(int side, int m1, int m2)
+{
+	update_battlefiled_all(false);
+	player1._battlefield->attack(player1._battlefield->_minion[side][m1],player2._battlefield->_minion[1-side][m2]);
+	player1._battlefield->checkAndDead();
+	update_battlefiled_all(true);
+}
+
 /* 更新手牌的信息 */
 void GameLayer:: update_handcard(Player* p1 ,int num)
 {
@@ -386,14 +423,13 @@ bool GameLayer::b_onTouchBegan(Touch *touch, Event *event)
 	Size s = target->getContentSize();
 	Rect rect = Rect(0, 0, s.width, s.height);
 	/* Limited range of touch */
-	double x = touch->getLocation().y ;
-	if(  200 < touch->getLocation().y < 280)
+	if(  140 < touch->getLocation().y && touch->getLocation().y < 260)
 	{
 		/* get the position of the card that we are operatoring*/
 		if(((int) touch->getLocation().x % 100) > 60 || ( ( (int)(touch->getLocation()).x % 100 ) <40 ))
 			{
 				int tmp = ( touch->getLocation().x - 40 ) / 100;
-				operator_position = tmp;
+				minion1_position = tmp;
 			}
 	    if (rect.containsPoint(locationInNode))
 			{
@@ -401,13 +437,14 @@ bool GameLayer::b_onTouchBegan(Touch *touch, Event *event)
 				return true;
 			}
 	}
+	minion1_position = -1;
 	return false;
 };
 
 void  GameLayer::b_onTouchMoved(Touch *touch, Event *event)
 {
-		auto target = static_cast<Sprite*>(event->getCurrentTarget());
-		target->setPosition(target->getPosition() + touch->getDelta());
+	//	auto target = static_cast<Sprite*>(event->getCurrentTarget());
+	//	target->setPosition(target->getPosition() + touch->getDelta());
 }; 
 
 void GameLayer::b_onTouchEnded(Touch *touch, Event *event)
@@ -415,62 +452,56 @@ void GameLayer::b_onTouchEnded(Touch *touch, Event *event)
 		auto target = static_cast<Sprite*>(event->getCurrentTarget());
 		Point locationInNode = touch->getLocation();
 
-		Rect rect1 = Rect(60,140,90,128);
-		Rect rect2 = Rect(160,140,90,128);
-		Rect rect3 = Rect(260,140,90,128);
-		Rect rect4 = Rect(360,140,90,128);
-		Rect rect5 = Rect(460,140,90,128);
-		Rect rect6 = Rect(560,140,90,128);
+		Rect rect1 = Rect(60,340,90,128);
+		Rect rect2 = Rect(160,340,90,128);
+		Rect rect3 = Rect(260,340,90,128);
+		Rect rect4 = Rect(360,340,90,128);
+		Rect rect5 = Rect(460,340,90,128);
+		Rect rect6 = Rect(560,340,90,128);
 		bool f = true;
 
 		/* ugly code */
 		if (rect1.containsPoint(locationInNode))
 		{
-			target->setOpacity(255);
-			target->setPosition(60+45,140+64);
-			battlefield_position = 0;
-			
-			
+			minion2_position = 0;	
 		}
 		else if(rect2.containsPoint(locationInNode))
 		{
-			target->setOpacity(255);
-			target->setPosition(160+45,140+64);
-			battlefield_position = 1;
-			
+			minion2_position = 1;
 		}
 		else if(rect3.containsPoint(locationInNode))
 		{
-			target->setOpacity(255);
-			target->setPosition(260+45,140+64);
-			battlefield_position = 2;
+			minion2_position = 2;
 		}
 		else if(rect4.containsPoint(locationInNode))
 		{
-			target->setOpacity(255);
-			target->setPosition(360+45,140+64);
-			battlefield_position = 3;
+			minion2_position = 3;
 			
 		}
 		else if(rect5.containsPoint(locationInNode))
 		{
-			target->setOpacity(255);
-			target->setPosition(460+45,140+64);
-			battlefield_position = 4;
+			minion2_position = 4;
 			
 		}
 		else if(rect6.containsPoint(locationInNode))
 		{
-			target->setOpacity(255);
-			target->setPosition(560+45,140+64);
-			battlefield_position = 5;
+			minion2_position = 5;
 			
 		}
 		else
 		{
-			target->setOpacity(255);
-			target->setPosition(Point(SPACING + SPACING * (operator_position) , 140 + 64));
-			f = false;
+			minion2_position = -1;
+		}
+
+		if (minion1_position >= 0 && minion2_position >= 0)
+		{
+			//TODO: minion1 attack minion2
+			if (player1._battlefield->_minion[0][minion1_position]->canAttack())
+			{
+				attack(0, minion1_position, minion2_position);
+				cl.attack(minion1_position, minion2_position);
+			}
+
 		}
 }; 
 
@@ -530,6 +561,7 @@ void GameLayer::wait_message(GameLayer * g,Player * player1 , Player * player2)
 				_minion1 = vi[1];
 				_minion2 = vi[2];
 				//TODO: battlefield[1][_minion2] attack battlefield[0][_minion1];
+				g->attack(1, _minion1, _minion2);
 				break;
 			case 8:
 				_card = vi[1];
