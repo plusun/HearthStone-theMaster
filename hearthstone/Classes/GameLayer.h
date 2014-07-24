@@ -38,6 +38,9 @@ public:
 	static int battlefield_position;
 	static int minion1_position;
 	static int minion2_position;
+	LabelTTF mana_label;
+	LabelTTF stat_label;
+	LabelTTF turn_label;
 
 	static cocos2d::Scene* createScene();
 	CREATE_FUNC(GameLayer);
@@ -49,6 +52,10 @@ public:
 	void update_battlefiled_all(bool);
 	void attack(int side, int m1, int m2);
 	void update_handcard(Player* p1 ,int );
+	void refresh_mana();
+	void refresh_stat(Character* m, Touch* touch);
+	void stat_hide(float f);
+	void refresh_turn();
 	bool b_add_touchListener(Player *,int ,int *,int *, int);
 	bool h_add_touchListener(Player *,int *,int *, int);
 	static void wait_message(GameLayer *,Player * , Player *);

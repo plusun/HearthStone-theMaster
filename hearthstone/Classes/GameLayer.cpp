@@ -54,19 +54,6 @@ bool GameLayer::init()
     bgSp->setScaleY(winSize.height/900);
     this->addChild(bgSp,0,0);
 
-	/* time progress */
-	CCSprite *s2=CCSprite::create("time2.png");     
-	s2->setPosition(ccp(winSize.width / 2+390, winSize.height / 2-100));    
-	this->addChild(s2,0);    
-	CCSprite *s=CCSprite::create("time1.png");    
-	CCProgressTimer *pt=CCProgressTimer::create(s);    
-	pt->setPosition(ccp(winSize.width / 2+390, winSize.height / 2-100));    
-	pt->setType(cocos2d::CCProgressTimerType(kCCProgressTimerTypeBar));
-	pt->setBarChangeRate(ccp(1, 0));
-	this->addChild(pt,1);    
-	CCProgressTo *t=CCProgressTo::create(60,100);    
-	pt->runAction(CCRepeatForever::create(t));
-
 	/* button */
 	auto cardMenuItem=MenuItemImage::create("chupai.png","chupai.png",CC_CALLBACK_1(GameLayer::cardMenuCallback, this, &player1, &operator_position ,&battlefield_position));
 	cardMenuItem->setPosition(Point(winSize.width / 2+390, winSize.height / 2-220));
@@ -80,17 +67,38 @@ bool GameLayer::init()
 	endMenu->setPosition(Point::ZERO); 
 	this->addChild(endMenu,1);
   
+	/* turn label */
+	turn_label.create("stat_label",  "Arial", 60);
+	turn_label.setString("Your turn");
+	turn_label.setFontSize(20);
+	turn_label.retain();
+	turn_label.setVisible(true); 
+	turn_label.setPosition(ccp(winSize.width *9/10, winSize.height *19/20) );  
+	this->addChild(&turn_label, 1); 
 
-	/* time label */
-	CCLabelTTF* pLabel = CCLabelTTF::create("Time", "Arial", 30);//要显示的内容，字体，字号    
-	pLabel->setPosition(ccp(winSize.width / 2+390, winSize.height / 2-150));  
-	this->addChild(pLabel, 1);  
+	/* mana label */
+	mana_label.create("mana_label",  "Arial", 60);
+	mana_label.setString("mana : 0/0");
+	mana_label.setFontSize(20);
+	mana_label.retain();
+	mana_label.setVisible(true); 
+	mana_label.setPosition(ccp(winSize.width *9/10, winSize.height *18/20) );  
+	this->addChild(&mana_label, 1); 
+ 
 
+	/* stat label */
+	stat_label.create("stat_label",  "Arial", 60);
+	stat_label.setFontSize(20);
+	stat_label.retain();
+	stat_label.setVisible(false); 
+	stat_label.setPosition(ccp(winSize.width *9/10, winSize.height *15/20) );  
+	this->addChild(&stat_label, 1); 
 
 	if(player1.is_first)
 	{
 		player1.turn();
 		player1.draw();
+		refresh_mana();
 
 		/* init the handcard */
 		for(int i = 0 ; i < player1._handcard._card.size(); i++)
@@ -125,6 +133,7 @@ bool GameLayer::init()
 	else
 	{
 		/* init the handcard */
+		refresh_turn();
 		player2.turn();
 		setTouchEnabled(false);
 		for(int i = 0 ; i < player1._handcard._card.size(); i++)
@@ -187,7 +196,7 @@ void GameLayer::cardMenuCallback(Object* pSender, Player * player1,int *operator
 			sprite_vec[*operator_position]->Sprite_card->setPosition(Point(SPACING +SPACING * *operator_position , WINSIZE_H / 2-260));
 		}
 	}
-
+	refresh_mana();
 }
 
 
@@ -198,6 +207,7 @@ void GameLayer::endMenuCallback(Object* pSender, Player * p1,Player * p2 , int *
 	cl.end_turn();
 	p1->over();
 	p2->turn();
+	refresh_turn();
 	std::thread wait(GameLayer::wait_message, this, p1 , p2);
 	wait.detach();
 }
@@ -287,6 +297,68 @@ void GameLayer:: update_handcard(Player* p1 ,int num)
 	}
 }
 
+/* 更新法力水晶显示 */
+void GameLayer::refresh_mana()
+{
+	int cur = player1._mana._cur_mana;
+	int max = player1._mana._max_mana;
+	string str1 = to_string(cur);
+	string str2 = to_string(max);
+	string str = "mana : ";
+	str += str1;
+	str +=  "/";
+	str += str2;
+
+	mana_label.setString(str);
+
+}
+
+/* 更新随从信息 */
+void GameLayer::refresh_stat(Character* m, Touch* touch)
+{
+	string str = "";
+	string str1 = "attack : ";
+	str1 += to_string(m->attack());
+	str1 += "\n";
+	str += str1;
+	str1 = "current health : ";
+	str1 += to_string(m->health());
+	str1 += "\n";
+	str += str1;
+	str1 = "max health : ";
+	str1 += to_string(m->maxHealth());
+	str1 += "\n";
+	str += str1;
+	str1 = "can attack : ";
+	str1 += m->canAttack() ? "true" : "false";
+	str1 += "\n";
+	str += str1;
+	stat_label.setString(str);
+	stat_label.setVisible(true);
+
+	CCPoint point = touch->getLocation(); 
+	stat_label.setPosition(point);
+	stat_label.setOpacity(200);
+	//CCMoveTo *move = CCMoveTo::create(1, point); //创建一个Action  
+	//stat_label.runAction(move);//执行这个Action 
+	scheduleOnce(schedule_selector(GameLayer::stat_hide), 3.0f);
+}
+
+/* 隐藏stat */
+void GameLayer::stat_hide(float f)
+{
+	stat_label.setVisible(false);
+}
+
+/* 更新谁的回合 */
+void GameLayer::refresh_turn()
+{
+	if (turn_label.getString() == "Your turn")
+		turn_label.setString("Opponent's turn");
+	else
+		turn_label.setString("Your turn");
+}
+
 /* 将战场中需要监听的对象加入监听 */
 bool GameLayer:: b_add_touchListener(Player * p1,int side , int * operator_pos ,int * battlefield_pos ,int tmp_pos)
 {
@@ -326,12 +398,12 @@ bool GameLayer::onTouchBegan(Touch *touch, Event *event)
 	Size s = target->getContentSize();
 	Rect rect = Rect(0, 0, s.width, s.height);
 	/* Limited range of touch */
-	if(touch->getLocation().y < 140)
+	if(touch->getLocation().y < 124)
 	{
 		/* get the position of the card that we are operatoring*/
-		if(((int) touch->getLocation().x % 100) > 60 || ( ( (int)(touch->getLocation()).x % 100 ) <40 ))
+		if(((int) touch->getLocation().x % 100) > 55 || ( ( (int)(touch->getLocation()).x % 100 ) < 45 ))
 			{
-				int tmp = ( touch->getLocation().x - 40 ) / 100;
+				int tmp = ( touch->getLocation().x - 45 ) / 100;
 				operator_position = tmp;
 			}
 	    if (rect.containsPoint(locationInNode))
@@ -360,6 +432,7 @@ void GameLayer::onTouchEnded(Touch *touch, Event *event)
 		Rect rect4 = Rect(360,140,90,128);
 		Rect rect5 = Rect(460,140,90,128);
 		Rect rect6 = Rect(560,140,90,128);
+		Rect rect7 = Rect(660,140,90,128);
 		bool f = true;
 
 		/* ugly code */
@@ -405,6 +478,13 @@ void GameLayer::onTouchEnded(Touch *touch, Event *event)
 			battlefield_position = 5;
 			
 		}
+		else if(rect7.containsPoint(locationInNode))
+		{
+			target->setOpacity(255);
+			target->setPosition(660+45,140+64);
+			battlefield_position = 6;
+			
+		}
 		else
 		{
 			target->setOpacity(255);
@@ -423,20 +503,37 @@ bool GameLayer::b_onTouchBegan(Touch *touch, Event *event)
 	Size s = target->getContentSize();
 	Rect rect = Rect(0, 0, s.width, s.height);
 	/* Limited range of touch */
-	if(  140 < touch->getLocation().y && touch->getLocation().y < 260)
+	if(  140 < touch->getLocation().y && touch->getLocation().y < 268)
 	{
+		int tmp;
 		/* get the position of the card that we are operatoring*/
-		if(((int) touch->getLocation().x % 100) > 60 || ( ( (int)(touch->getLocation()).x % 100 ) <40 ))
+		if(((int) touch->getLocation().x % 100) > 60 || ( ( (int)(touch->getLocation()).x % 100 ) <50 ))
 			{
-				int tmp = ( touch->getLocation().x - 40 ) / 100;
+				tmp = ( touch->getLocation().x - 50 ) / 100;
 				minion1_position = tmp;
 			}
 	    if (rect.containsPoint(locationInNode))
 			{
-				target->setOpacity(180);
+				refresh_stat(player1._battlefield->_minion[0][tmp],touch);
 				return true;
 			}
 	}
+	if(  340 < touch->getLocation().y && touch->getLocation().y < 468)
+	{
+		minion1_position = -1;
+		int tmp;
+		/* get the position of the card that we are operatoring*/
+		if(((int) touch->getLocation().x % 100) > 60 || ( ( (int)(touch->getLocation()).x % 100 ) < 50 ))
+			{
+				tmp = ( touch->getLocation().x - 50 ) / 100;
+			}
+	    if (rect.containsPoint(locationInNode))
+			{
+				refresh_stat(player2._battlefield->_minion[1][tmp],touch);
+				return true;
+			}
+	}
+
 	minion1_position = -1;
 	return false;
 };
@@ -458,35 +555,40 @@ void GameLayer::b_onTouchEnded(Touch *touch, Event *event)
 		Rect rect4 = Rect(360,340,90,128);
 		Rect rect5 = Rect(460,340,90,128);
 		Rect rect6 = Rect(560,340,90,128);
+		Rect rect7 = Rect(660,340,90,128);
 		bool f = true;
 
 		/* ugly code */
-		if (rect1.containsPoint(locationInNode))
+		if (rect1.containsPoint(locationInNode) && player1._battlefield->_minion[1].size() > 0)
 		{
-			minion2_position = 0;	
+			minion2_position = 0;
 		}
-		else if(rect2.containsPoint(locationInNode))
+		else if(rect2.containsPoint(locationInNode) && player1._battlefield->_minion[1].size() > 1)
 		{
 			minion2_position = 1;
 		}
-		else if(rect3.containsPoint(locationInNode))
+		else if(rect3.containsPoint(locationInNode) && player1._battlefield->_minion[1].size() > 2)
 		{
 			minion2_position = 2;
 		}
-		else if(rect4.containsPoint(locationInNode))
+		else if(rect4.containsPoint(locationInNode) && player1._battlefield->_minion[1].size() > 3)
 		{
 			minion2_position = 3;
 			
 		}
-		else if(rect5.containsPoint(locationInNode))
+		else if(rect5.containsPoint(locationInNode) && player1._battlefield->_minion[1].size() > 4)
 		{
 			minion2_position = 4;
 			
 		}
-		else if(rect6.containsPoint(locationInNode))
+		else if(rect6.containsPoint(locationInNode) && player1._battlefield->_minion[1].size() > 5)
 		{
 			minion2_position = 5;
 			
+		}
+		else if(rect7.containsPoint(locationInNode) && player1._battlefield->_minion[1].size() > 6)
+		{
+			minion2_position = 6;
 		}
 		else
 		{
@@ -536,6 +638,8 @@ void GameLayer::wait_message(GameLayer * g,Player * player1 , Player * player2)
 				player1->turn();
 				player1->draw();
 				g->update_handcard(player1 , 1);
+				g->refresh_mana();
+				g->refresh_turn();
 				if (is_first_turn)
 				{
 					is_first_turn = false;

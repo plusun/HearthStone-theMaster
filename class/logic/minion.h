@@ -20,7 +20,7 @@ class BloodfenRaptor: public Minion
 {
 public:
   BloodfenRaptor():
-    Minion(beast, 3, 2)
+    Minion(beast, 2, 3)
   {
     no = MAXHERONO + 2;
   }
@@ -30,7 +30,7 @@ class Amani: public Minion
 {
 public:
   Amani():
-    Minion(none, 2, 3)
+    Minion(none, 3, 2)
   {
     no = MAXHERONO + 3;
   }
@@ -40,7 +40,7 @@ class JunglePanther: public Minion
 {
 public:
   JunglePanther():
-    Minion(beast, 4, 2)
+    Minion(beast, 2, 4)
   {
     no = MAXHERONO + 4;
   }
