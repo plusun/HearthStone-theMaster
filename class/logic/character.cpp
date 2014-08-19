@@ -197,7 +197,7 @@ void Minion::damaged(int damage)
 
 bool Minion::canAttack()
 {
-  return !newMinion() && !tired() && !frozen() && attack() > 0;
+  return (!newMinion() || buff._charge) && !tired() && !frozen() && attack() > 0;
 }
 Race Minion::race()
 {
