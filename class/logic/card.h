@@ -3,6 +3,8 @@
 
 #include "basic.h"
 #include "character.h"
+#include "spell.h"
+#include "battlefield.h"
 #include "cocos2d.h"
 #include <map>
 
@@ -57,7 +59,16 @@ public:
     _minion = new_minion;
   }
 };
+
+class SpellCard: public Card
+{
+public:
+  Spell *spell;
+  SpellCard(int cost, Spell *s):
+    Card(cost, SPELL), spell(s) {}
+};
+
 extern std::map<int, Card *> cardPool;
-Card *NumberToCard(int no);
+Card *NumberToCard(int no, Battlefield *bf = NULL, int side = 0);
 string NumberToFilename(int no);
 #endif

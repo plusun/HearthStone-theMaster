@@ -1,11 +1,11 @@
-#ifndef __SPELL__
-#define __SPELL__
+#ifndef __BATTLEFIELD__
+#define __BATTLEFIELD__
 
 #include "basic.h"
 #include "character.h"
 
 #define SIDE 2
-#define MAXMINION 10
+#define MAXMINIONB 10
 
 class Battlefield
 {
@@ -32,7 +32,7 @@ public:
   }
   bool summon_minion(Minion* m, int side , int position = -1)
   {
-    if (_minion[side].size() > MAXMINION)
+    if (_minion[side].size() > MAXMINIONB)
       return false;
     if (position < 0 || position > _minion[side].size())
       _minion[side].push_back(m);

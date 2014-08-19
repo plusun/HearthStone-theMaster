@@ -3,7 +3,9 @@
 
 #include "basic.h"
 #include "character.h"
-#include "player.h"
+#include "battlefield.h"
+
+#define DEATHDMG 9999
 
 enum SpellType
   {
@@ -23,8 +25,8 @@ enum Target
 class Spell
 {
 public:
-  Spell(Target t, SpellType st, int v, Player *p):
-    target(t), type(st), value(v), pl(p)
+  Spell(Target t, SpellType st, int v, Battlefield *b, int s):
+    target(t), type(st), value(v), bf(b), side(s)
   {
   }
   vector<Hero *> heroes;
@@ -32,11 +34,11 @@ public:
   Target target;
   SpellType type;
   int value;
-  Player *pl;
+  Battlefield *bf;
+  int side;
 
   virtual bool use(Hero *heroTarget = NULL, Minion *minionTarget = NULL)
   {
-    Battlefield *bf = pl->_battlefield;
     int MAXHP = 10086;
     switch (target)
       {
@@ -82,7 +84,7 @@ public:
 	heroes.clear();
 	minions.clear();
 	for (int i = 0; i < SIDE; ++i)
-	  if (i != pl->side)
+	  if (i != side)
 	    {
 	      heroes.push_back(bf->_hero[i]);
 	      for (int j = 0; j < bf->_minion[i].size(); ++j)
@@ -93,7 +95,7 @@ public:
 	heroes.clear();
 	minions.clear();
 	for (int i = 0; i < SIDE; ++i)
-	  if (i != pl->side)
+	  if (i != side)
 	    {
 	      heroes.push_back(bf->_hero[i]);
 	    }
@@ -102,7 +104,7 @@ public:
 	heroes.clear();
 	minions.clear();
 	for (int i = 0; i < SIDE; ++i)
-	  if (i != pl->side)
+	  if (i != side)
 	    {
 	      for (int j = 0; j < bf->_minion[i].size(); ++j)
 		minions.push_back(bf->_minion[i][j]);
@@ -193,18 +195,102 @@ public:
   }
 };
 
-class Flamestrike: Spell
+class Flamestrike: public Spell
 {
 public:
-  Flamestrike(Player *p):
-    Spell(AllEnemyMinion, DMG, 4, p) {}
+  Flamestrike(Battlefield *bf, int side):
+    Spell(AllEnemyMinion, DMG, 4, bf, side) {}
 };
 
-class Fireball: Spell
+class Consecration: public Spell
 {
 public:
-  Fireball(Player *p):
-    Spell(SPECIFIC, DMG, 6, p) {}
+  Consecration(Battlefield *bf, int side):
+    Spell(AllEnemyMinion, DMG, 2, bf, side) {}
+};
+
+class ArcaneExplosion: public Spell
+{
+public:
+  ArcaneExplosion(Battlefield *bf, int side):
+    Spell(AllEnemyMinion, DMG, 1, bf, side) {}
+};
+
+class Fireball: public Spell
+{
+public:
+  Fireball(Battlefield *bf, int side):
+    Spell(SPECIFIC, DMG, 6, bf, side) {}
+};
+
+class Moonfire: public Spell
+{
+public:
+  Moonfire(Battlefield *bf, int side):
+    Spell(SPECIFIC, DMG, 1, bf, side) {}
+};
+
+class Starfall: public Spell
+{
+public:
+  Starfall(Battlefield *bf, int side):
+    Spell(SPECIFIC, DMG, 5, bf, side) {}
+};
+
+class Pyroblast: public Spell
+{
+public:
+  Pyroblast(Battlefield *bf, int side):
+    Spell(SPECIFIC, DMG, 10, bf, side) {}
+};
+
+class HolyLight: public Spell
+{
+public:
+  HolyLight(Battlefield *bf, int side):
+    Spell(SPECIFIC, HEAL, 6, bf, side) {}
+};
+
+class Assassinate: public Spell
+{
+public:
+  Assassinate(Battlefield *bf, int side):
+    Spell(SPECIFIC, DMG, DEATHDMG, bf, side) {}
+};
+
+class TwistingNether: public Spell
+{
+public:
+  TwistingNether(Battlefield *bf, int side):
+    Spell(AllEnemyMinion, DMG, DEATHDMG, bf, side) {}
+};
+
+class Hellfire: public Spell
+{
+public:
+  Hellfire(Battlefield *bf, int side):
+    Spell(ALL, DMG, 3, bf, side) {}
+};
+
+class ShadowBolt: public Spell
+{
+public:
+  ShadowBolt(Battlefield *bf, int side):
+    Spell(SPECIFIC, DMG, 4, bf, side) {}
+};
+
+class ArcaneShot: public Spell
+{
+public:
+  ArcaneShot(Battlefield *bf, int side):
+    Spell(SPECIFIC, DMG, 2, bf, side) {}
+};
+
+class CircleOfHealing: public Spell
+{
+public:
+  CircleOfHealing(Battlefield *bf, int side):
+    Spell(AllMinion, HEAL, 4, bf, side) {}
 };
 
 #endif

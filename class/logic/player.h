@@ -10,7 +10,6 @@
 
 #define maxhp 30
 
-
 class Sustainable_effect
 {
 public:
