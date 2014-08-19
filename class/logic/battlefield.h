@@ -45,11 +45,42 @@ public:
       delete _minion[side][position];
     _minion[side].erase(_minion[side].begin() + position);
   }
+  bool canBeAttacked(Character *b)
+  {
+    int side = -1;
+    bool hero = false;
+    for (int i = 0; i < SIDE; ++i)
+      {
+	if (_hero[i] == b)
+	  {
+	    side = i;
+	    hero = true;
+	    break;
+	  }
+	for (int j = 0; j < _minion[i].size(); ++j)
+	  if (_minion[i][j] == b)
+	    {
+	      side = i;
+	      break;
+	    }
+	if (side >= 0)
+	  break;
+      }
+    if (side < 0)
+      return false;
+    if (!hero && ((Minion *)b)->buff._taunt)
+      return true;
+    for (int i = 0; i < _minion[side].size(); ++i)
+      if (_minion[side][i]->buff._taunt)
+	return false;
+    return true;
+  }
   static bool attack(Character *a, Character *b)
   {
     if (!a->canAttack())
       return false;
-
+    if (!canBeAttacked(b))
+      return false;
     a->attacking(b);
     b->attacked(a);
     a->tired(true);
