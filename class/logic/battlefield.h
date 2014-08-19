@@ -62,6 +62,15 @@ public:
 	if (_minion[side][i]->health() <= 0)
 	  destroy_minion(side, i);
   }
+  int checkwin()
+  {
+	  int n = 0;
+	  if (_hero[0]->health() <= 0)
+		  n += 1;
+	  if (_hero[1]->health() <= 0)
+		  n += 2;
+	  return n;
+  }
   void startSide(int side)
   {
     for (int i = 0; i < _minion[side].size(); ++i)

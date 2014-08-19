@@ -10,7 +10,7 @@ class Wisp: public Minion
 {
 public:
   Wisp():
-    Minion(none, 1, 1)
+    Minion(none, 1, 100)
   {
     no = MAXHERONO + 1;
   }

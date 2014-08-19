@@ -68,6 +68,14 @@ client::client(string str)
 
 client::client()
 {
+	//char buf[1000];
+	//getcwd(buf,1000);
+
+	string filename = "ip.txt";
+	ifstream file(filename.c_str(),ifstream::in);
+	string str;
+	getline(file,str);
+
 	int err;   // 客户端Scoket
 	SOCKADDR_IN addrServer;// 服务端地址
 	WSADATA wsaData;
@@ -85,7 +93,7 @@ client::client()
 		return;
 	} // 新建客户端scoket
 	sockClient = socket(AF_INET, SOCK_STREAM, 0); // 定义要连接的服务端地址
-	addrServer.sin_addr.S_un.S_addr = inet_addr("127.0.0.1"); // 目标IP (127.0.0.1是本机地址)
+	addrServer.sin_addr.S_un.S_addr = inet_addr(str.c_str()); // 目标IP (127.0.0.1是本机地址)
 	addrServer.sin_family = AF_INET; // 协议类型是INET
 	addrServer.sin_port = htons(6000); // 连接端口6000
 	// 让 sockClient 连接到 服务端

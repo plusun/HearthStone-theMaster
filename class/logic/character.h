@@ -37,6 +37,7 @@ public:
   virtual void attacking(Character *c);
   virtual void attacked(Character *c);
   virtual void damaged(int);
+  Sprite * Sprite_card;
 };
 
 class Hero: public Character
@@ -77,7 +78,6 @@ public:
   void damaged(int);
   bool canAttack();
   Race race();
-  Sprite * Sprite_card;
 };
 
 std::string CharacterToFilename(Character *);

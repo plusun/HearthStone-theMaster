@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <iostream> 
 #include "string.h"
+#include <fstream>
+#include <sstream>
 using namespace std; 
 #pragma comment(lib, "ws2_32.lib")
 

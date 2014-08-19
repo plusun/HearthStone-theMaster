@@ -3,6 +3,7 @@
 
 #include "card.h"
 #include <ctime>
+#include <fstream>
 #define deck_amount 30
 
 class deck

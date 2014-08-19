@@ -6,6 +6,7 @@
 #include "logic/player.h"
 #include "logic/client.h"
 
+
 using namespace std;
 
 USING_NS_CC;
@@ -41,6 +42,7 @@ public:
 	LabelTTF mana_label;
 	LabelTTF stat_label;
 	LabelTTF turn_label;
+	LabelTTF label;
 
 	static cocos2d::Scene* createScene();
 	CREATE_FUNC(GameLayer);
@@ -57,11 +59,13 @@ public:
 	void stat_hide(float f);
 	void refresh_turn();
 	bool b_add_touchListener(Player *,int ,int *,int *, int);
+	bool bh_add_touchListener(Player *,int);
 	bool h_add_touchListener(Player *,int *,int *, int);
 	static void wait_message(GameLayer *,Player * , Player *);
 	Minion * find_minion(int);
 	void init_img();
-	
+	void end_game(int n);
+
 	virtual bool onTouchBegan(Touch *touch, Event *unused_event); 
     virtual void onTouchMoved(Touch *touch, Event *unused_event); 
     virtual void onTouchEnded(Touch *touch, Event *unused_event); 
