@@ -1,3 +1,6 @@
+#ifndef __SPELL__
+#define __SPELL__
+
 #include "basic.h"
 #include "character.h"
 
@@ -75,7 +78,7 @@ public:
 	return false;
     return true;
   }
-  static bool attack(Character *a, Character *b)
+  bool attack(Character *a, Character *b)
   {
     if (!a->canAttack())
       return false;
@@ -116,3 +119,5 @@ public:
       _minion[side][i]->tired(false);
   }
 };
+
+#endif

@@ -34,12 +34,23 @@ public:
   int value;
   Player *pl;
 
-  virtual void use()
+  virtual bool use(Hero *heroTarget = NULL, Minion *minionTarget = NULL)
   {
     Battlefield *bf = pl->_battlefield;
     int MAXHP = 10086;
     switch (target)
       {
+      case SPECIFIC:
+	if ((heroTarget == NULL && minionTarget == NULL) ||
+	    (heroTarget != NULL && minionTarget != NULL))
+	  return false;
+	heroes.clear();
+	minions.clear();
+	if (heroTarget != NULL)
+	  heroes.push_back(heroTarget);
+	if (minionTarget != NULL)
+	  minions.push_back(minionTarget);
+	break;
       case ALL:
 	heroes.clear();
 	minions.clear();
@@ -178,6 +189,7 @@ public:
 	break;
       }
     bf->checkAndDead();
+    return true;
   }
 };
 
@@ -186,6 +198,13 @@ class Flamestrike: Spell
 public:
   Flamestrike(Player *p):
     Spell(AllEnemyMinion, DMG, 4, p) {}
+};
+
+class Fireball: Spell
+{
+public:
+  Fireball(Player *p):
+    Spell(SPECIFIC, DMG, 6, p) {}
 };
 
 #endif
