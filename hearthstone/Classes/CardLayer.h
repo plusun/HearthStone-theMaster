@@ -5,6 +5,7 @@
 #include "cocos-ext.h"
 #include "logic/player.h"
 #include "./logic/basic.h"
+#include "LoginScene.h"
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -12,7 +13,7 @@
 #define _amount 30
 #define MaxPage 4
 #define MinPage 0
-#define MaxImg 5
+#define MaxImg 19
 #define WINSIZE_W 960
 #define WINSIZE_H 640
 #define FirstLineOfImg 5
@@ -35,12 +36,15 @@ public:
 	static int NumOfCard;
 
 	LabelTTF LabelOfPage;
+	LabelTTF label;
 	Sprite * Img[10];
 	vector<int> vi;
 	Sprite* sp[_amount];
 
 	void PrevMenuCallback(Object* pSender);
 	void NextMenuCallback(Object* pSender);
+	void finishMenuCallback(Object* pSender);
+	void backMenuCallback(Object* pSender);
 
 	void ChangePage(int );
 	void UpdateImg(int );
@@ -50,6 +54,7 @@ public:
 	void del_card(int n);
 	bool finish();
 	void refresh_pic();
+	void label_hide(float f);
 
     virtual void onMouseDown(Event *event);  
 };

@@ -3,7 +3,7 @@
 
 #include "card.h"
 
-#define MAXHCARD 10
+#define MAXHCARD 100
 
 class Handcard
 {

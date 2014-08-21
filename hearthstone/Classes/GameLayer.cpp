@@ -76,6 +76,19 @@ bool GameLayer::init()
 	turn_label.setPosition(ccp(winSize.width *9/10, winSize.height *19/20) );  
 	this->addChild(&turn_label, 1); 
 
+	/* time label */
+	/**
+	time_ = 0;
+	time_label.create("time_label",  "Arial", 60);
+	time_label.setString("Time : 0/30");
+	time_label.setFontSize(30);
+	time_label.retain();
+	time_label.setVisible(true); 
+	time_label.setPosition(ccp(winSize.width / 2  , winSize.height / 2 + 200) );  
+	this->addChild(&time_label, 1); 
+	schedule(schedule_selector(GameLayer::time_change), 5.0f);
+	*/
+
 	/* mana label */
 	mana_label.create("mana_label",  "Arial", 60);
 	mana_label.setString("mana : 0/0");
@@ -120,7 +133,7 @@ bool GameLayer::init()
 		/* init the handcard */
 		for(int i = 0 ; i < player1._handcard._card.size(); i++)
 		{
-			Card* tmp_sprite = NumberToCard(player1._handcard._card[i]);
+			Card* tmp_sprite = NumberToCard(player1._handcard._card[i],player1._battlefield,0);
 			sprite_vec.push_back(tmp_sprite);
 			tmp_sprite->Sprite_card = Sprite::create(NumberToFilename(player1._handcard._card[i]));//we should use the file path
 			tmp_sprite->Sprite_card->setPosition(Point(SPACING + SPACING * i, winSize.height / 2-260));
@@ -144,7 +157,7 @@ bool GameLayer::init()
 		for(int i  = 0 ; i < player1._handcard._card.size() ; i++)
 		{
 			cl.draw_card(player1._handcard._card[i]);
-			Sleep(200);
+			Sleep(1000);
 		}
 	}
 	else
@@ -157,7 +170,7 @@ bool GameLayer::init()
 
 		for(int i = 0 ; i < player1._handcard._card.size(); i++)
 		{
-			Card* tmp_sprite = NumberToCard(player1._handcard._card[i]);
+			Card* tmp_sprite = NumberToCard(player1._handcard._card[i],player1._battlefield,1);
 			sprite_vec.push_back(tmp_sprite);
 			tmp_sprite->Sprite_card = Sprite::create(NumberToFilename(player1._handcard._card[i]));//we should use the file path
 			tmp_sprite->Sprite_card->setPosition(Point(SPACING + SPACING * i, winSize.height / 2-260));
@@ -350,7 +363,11 @@ void GameLayer:: update_handcard(Player* p1 ,int num)
 	int size_card = p1->_handcard._card.size();
 	for(int i = num ; i > 0 ; i--)
 	{
-		Card* tmp_sprite = NumberToCard(p1->_handcard._card[size_card - i]);
+		Card* tmp_sprite;
+		if(player1.is_first)
+			tmp_sprite = NumberToCard(p1->_handcard._card[size_card - i],p1->_battlefield,0);
+		else
+			tmp_sprite = NumberToCard(p1->_handcard._card[size_card - i],p1->_battlefield,1);
 		sprite_vec.push_back(tmp_sprite);
 		string str = NumberToFilename(player1._handcard._card[size_card - i]);
 		tmp_sprite->Sprite_card = Sprite::create(str,Rect(0,0,90,128));
@@ -413,6 +430,31 @@ void GameLayer::stat_hide(float f)
 	stat_label.setVisible(false);
 }
 
+/* 改变时间*/
+void GameLayer::time_change(float f)
+{
+	string str = "";
+	string str1 = "time : ";
+	string str2 = "/30";
+   
+    time_ = time_ + 5;
+	if(time_ < 30)
+	{
+		str = to_string(time_);
+		str1 = str1 + str;
+		str1 = str1 + str2;
+		time_label.setString(str1);
+	}
+	else 
+	{
+		time_ = 0;
+		str = to_string(time_);
+		str1 = str1 + str;
+		str1 = str1 + str2;
+		time_label.setString(str1);
+	}
+}
+
 /* 更新谁的回合 */
 void GameLayer::refresh_turn()
 {
@@ -442,6 +484,7 @@ bool GameLayer:: b_add_touchListener(Player * p1,int side , int * operator_pos ,
 	return true;
 }
 
+/* 将战场需要 */
 bool GameLayer:: bh_add_touchListener(Player * p1,int side)
 {
 	auto touchListener = EventListenerTouchOneByOne::create();
@@ -745,7 +788,7 @@ void GameLayer::wait_message(GameLayer * g,Player * player1 , Player * player2)
 					for(int i  = 0 ; i < player1->_handcard._card.size() ; i++)
 					{
 						cl.draw_card(player1->_handcard._card[i]);
-						Sleep(200);
+						Sleep(1000);
 					}
 				}
 				else
@@ -782,53 +825,27 @@ void GameLayer::init_img()
 {
 	for(int i = 0 ; i < player1._deck->_amount; i++ )
 	{
-		Card* tmp_sprite = NumberToCard(player1._deck->_card[i]);
+		Card* tmp_sprite = NumberToCard(player1._deck->_card[i],player1._battlefield,0);
 		sprite_vec.push_back(tmp_sprite);
 		tmp_sprite->Sprite_card = Sprite::create(NumberToFilename(player1._deck->_card[i]));
 	}
 	sprite_vec.clear();
-	/*
-	for(int j = 1; j <= MAXCARDNO; j++)
+
+	vector<string> vi;
+	ifstream file("minion.txt",ios::in);
+	while (!file.eof())
 	{
-		for(int k = 0 ; k < 30 ; k++)
-		{
-			MinionCard* tmp_sprite =(MinionCard *) NumberToCard(j);
-			tmp_sprite->_minion->Sprite_card= Sprite::create(CharacterToFilename(tmp_sprite->_minion));
-			minion_vec.push_back(tmp_sprite);
-		}
-	}
-	*/
-	
-	int m = 0;
-	for(int k = 0 ; k < 9 ; k++)
-	{
-		player2.turn();
-		player2.draw();
-	}
-		for(int  j = 0 ; j < 30 ; j++)
-	{
-		player2.turn();
-		player2.draw();
-		if(player2.use(0,j))
-		{
-			string str = CharacterToFilename(player2._battlefield->_minion[1][j]);
-			Sprite * Sprite_card = Sprite::create(CharacterToFilename(player2._battlefield->_minion[1][j])); 
-			if(player2._battlefield->_minion[1].size() == 10)
-			{
-				player2._battlefield->_minion[1].clear();
-				j = -1;
-			}
-			m++;
-		}
-		if(m == 30)
-		{
-			player2._battlefield->_minion[1].clear();
-			player2._deck->_amount =30;
-			player2._handcard._card.clear();
-			player2._mana._max_mana = 0;
-			player2._mana._cur_mana = 0;
+		string tmp;
+		file >> tmp;
+		if (file.fail())
 			break;
-		}
+		vi.push_back(tmp);
+	}
+	file.close();
+	for(int i = 0 ; i < vi.size() ; i++)
+	{
+		string str_tmp = vi[i];
+		Sprite * sp = Sprite::create(str_tmp);
 	}
 }
 

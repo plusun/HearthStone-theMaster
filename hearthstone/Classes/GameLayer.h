@@ -32,6 +32,7 @@ public:
 	Player player1;
 	Player player2;
 	static bool is_first_turn;
+	time_t time_;
 
 	vector<Card * >sprite_vec;
 	vector<MinionCard *>minion_vec;
@@ -40,6 +41,7 @@ public:
 	static int minion1_position;
 	static int minion2_position;
 	LabelTTF mana_label;
+	LabelTTF time_label;
 	LabelTTF stat_label;
 	LabelTTF turn_label;
 	LabelTTF label;
@@ -57,6 +59,7 @@ public:
 	void refresh_mana();
 	void refresh_stat(Character* m, Touch* touch);
 	void stat_hide(float f);
+	void time_change(float f);
 	void refresh_turn();
 	bool b_add_touchListener(Player *,int ,int *,int *, int);
 	bool bh_add_touchListener(Player *,int);
