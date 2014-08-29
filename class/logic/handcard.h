@@ -9,7 +9,9 @@ class Handcard
 {
 public:
   vector<int> _card;
-  Handcard()
+  Battlefield *bf;
+  int side;
+  Handcard(Battlefield *b, int s): bf(b), side(s)
   {
     _card.clear();
   }
@@ -19,13 +21,13 @@ public:
   }
   int getCost(int position)
   {
-    Card *card = NumberToCard(_card[position]);
+    Card *card = NumberToCard(_card[position], bf, side);
     int ret = card->cost();
     return ret;
   }
   Card *getCard(int position)
   {
-    return NumberToCard(_card[position]);
+    return NumberToCard(_card[position], bf, side);
   }
   Card *use_card(int position)
   {
@@ -33,7 +35,7 @@ public:
       return NULL;
     int tmp = _card[position];
     _card.erase(_card.begin() + position);
-    return NumberToCard(tmp);
+    return NumberToCard(tmp, bf, side);
   }
   bool full()
   {

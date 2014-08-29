@@ -23,11 +23,11 @@ class Player
 public:
   deck *_deck;
   Battlefield *_battlefield;
-  Handcard _handcard;
   Mana _mana;
   //Secret_slot _secret;
   bool is_first;
   int side;
+  Handcard _handcard;
 public:
   Player(deck *d, Battlefield *b, bool f, int side);
   void init();

@@ -53,11 +53,11 @@ public:
     Minion(beast, 3, 3)
   {
     no = MAXHERONO + 5;
-	buff._taunt = true;
+    buff._taunt = true;
   }
 };
 
-class ChillwindYeti: public Minion // Ñ©°Ö°Ö cost 4
+class ChillwindYeti: public Minion // Ã‘Â©Â°Ã–Â°Ã– cost 4
 {
 public:
   ChillwindYeti():
@@ -67,7 +67,7 @@ public:
   }
 };
 
-class CoreHound: public Minion // µØÓüÈÛÑÒÈ® cost 7
+class CoreHound: public Minion // ÂµÃ˜Ã“Ã¼ÃˆÃ›Ã‘Ã’ÃˆÂ® cost 7
 {
 public:
   CoreHound():
@@ -77,7 +77,7 @@ public:
   }
 };
 
-class WarGolem: public Minion // Õ½¶·¿şÀÜ  cost 7
+class WarGolem: public Minion // Ã•Â½Â¶Â·Â¿Ã¾Ã€Ãœ  cost 7
 {
 public:
   WarGolem():
@@ -87,7 +87,7 @@ public:
   }
 };
 
-class BoulderfistOgre: public Minion //  ÀÏ±Ï cost 6
+class BoulderfistOgre: public Minion //  Ã€ÃÂ±Ã cost 6
 {
 public:
   BoulderfistOgre():
@@ -97,7 +97,7 @@ public:
   }
 };
 
-class MagmaRager: public Minion // ÎåÒ»ÖÁ×ğ cost 3
+class MagmaRager: public Minion // ÃÃ¥Ã’Â»Ã–ÃÃ—Ã° cost 3
 {
 public:
   MagmaRager():
@@ -107,7 +107,7 @@ public:
   }
 };
 
-class MurlocRaider: public Minion //ÓãÈË 1-2-1 cost 1
+class MurlocRaider: public Minion //Ã“Ã£ÃˆÃ‹ 1-2-1 cost 1
 {
 public:
   MurlocRaider():
@@ -117,7 +117,7 @@ public:
   }
 };
 
-class OasisSnapjaw: public Minion //  ´óÎÚ¹ê	cost 4
+class OasisSnapjaw: public Minion //  Â´Ã³ÃÃšÂ¹Ãª	cost 4
 {
 public:
   OasisSnapjaw():
@@ -127,7 +127,7 @@ public:
   }
 };
 
-class RiverCrocolisk: public Minion // µ­Ë®öù cost 2
+class RiverCrocolisk: public Minion // ÂµÂ­Ã‹Â®Ã¶Ã¹ cost 2
 {
 public:
   RiverCrocolisk():
@@ -136,5 +136,17 @@ public:
     no = MAXHERONO + 13;
   }
 };
+
+class FenCreeper: public Minion // æ²¼æ³½çˆ¬è¡Œè€… cost 5
+{
+public:
+  FenCreeper():
+    Minion(none, 3, 6)
+  {
+    no = MAXHERONO + 14;
+    buff._taunt = true;
+  }
+};
+
 #endif
 

@@ -2,7 +2,7 @@
 
 
 Player::Player(deck *d, Battlefield *b, bool f, int s):
-  _deck(d), _battlefield(b), is_first(f), side(s)
+  _deck(d), _battlefield(b), is_first(f), side(s), _handcard(b, s)
 {
 }
 

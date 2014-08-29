@@ -69,6 +69,6 @@ public:
 };
 
 extern std::map<int, Card *> cardPool;
-Card *NumberToCard(int no, Battlefield *bf = NULL, int side = 0);
+Card *NumberToCard(int no, Battlefield *bf, int side);
 string NumberToFilename(int no);
 #endif
