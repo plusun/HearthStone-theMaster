@@ -47,7 +47,7 @@ void Player::over()
 }
 
 // use ith handcard
-bool Player::use(int i, int pos)
+bool Player::use(int i, int pos, Hero *hero, Minion *minion)
 {
   if (_handcard.getCost(i) > _mana.cur_mana())
     return false;
@@ -56,11 +56,17 @@ bool Player::use(int i, int pos)
     return false;
   _mana.cost_mana(card->cost());
   MinionCard *c = NULL;
+  SpellCard *s = NULL;
   switch (card->_type)
     {
     case MINION:
       c = (MinionCard *)card;
       _battlefield->summon_minion(c->minion() , this->side , pos);
+      break;
+    case SPELL:
+      s = (SpellCard *)card;
+      if (!s->spell->use(hero, minion))
+	return false;
       break;
     default:
       break;
