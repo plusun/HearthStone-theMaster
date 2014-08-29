@@ -64,13 +64,12 @@ public:
 	bool b_add_touchListener(Player *,int ,int *,int *, int);
 	bool bh_add_touchListener(Player *,int);
 	bool h_add_touchListener(Player *,int *,int *, int);
+	bool s_add_touchListener();
 	static void wait_message(GameLayer *,Player * , Player *);
 	Minion * find_minion(int);
 	void init_img();
 	void end_game(int n);
 	string get_type(Minion *);
-
-
 
 	virtual bool onTouchBegan(Touch *touch, Event *unused_event); 
     virtual void onTouchMoved(Touch *touch, Event *unused_event); 
@@ -79,6 +78,11 @@ public:
 	virtual bool b_onTouchBegan(Touch *touch, Event *unused_event); 
     virtual void b_onTouchMoved(Touch *touch, Event *unused_event); 
     virtual void b_onTouchEnded(Touch *touch, Event *unused_event); 
+
+	
+	virtual bool s_onTouchBegan(Touch *touch, Event *unused_event); 
+    virtual void s_onTouchMoved(Touch *touch, Event *unused_event); 
+    virtual void s_onTouchEnded(Touch *touch, Event *unused_event); 
 
 private:
 	

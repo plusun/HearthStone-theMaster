@@ -147,11 +147,22 @@ bool GameLayer::init()
 		touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
 		touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
 		touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
-	
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, sprite_vec[0]->Sprite_card);
+
+		auto touchListener_ = EventListenerTouchOneByOne::create();
+		touchListener_->setSwallowTouches(true);
+		touchListener_->onTouchBegan = CC_CALLBACK_2(GameLayer::s_onTouchBegan, this);
+		touchListener_->onTouchMoved = CC_CALLBACK_2(GameLayer::s_onTouchMoved, this);
+		touchListener_->onTouchEnded = CC_CALLBACK_2(GameLayer::s_onTouchEnded, this);
+		
+		if(sprite_vec[0]->_type == CardType::MINION)
+			_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, sprite_vec[0]->Sprite_card);
+		else
+			_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener_, sprite_vec[0]->Sprite_card);
 		for(int i = 1 ; i < player1._handcard._card.size() ;i++)
 		{
 			if(sprite_vec[i]->_type == CardType::MINION)
+				_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener->clone(),sprite_vec[i]->Sprite_card);
+			else
 				_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener->clone(),sprite_vec[i]->Sprite_card);
 		}
 
@@ -185,11 +196,22 @@ bool GameLayer::init()
 		touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
 		touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
 		touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
+
+		auto touchListener_ = EventListenerTouchOneByOne::create();
+		touchListener_->setSwallowTouches(true);
+		touchListener_->onTouchBegan = CC_CALLBACK_2(GameLayer::s_onTouchBegan, this);
+		touchListener_->onTouchMoved = CC_CALLBACK_2(GameLayer::s_onTouchMoved, this);
+		touchListener_->onTouchEnded = CC_CALLBACK_2(GameLayer::s_onTouchEnded, this);
 	
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, sprite_vec[0]->Sprite_card);
+		if(sprite_vec[0]->_type == CardType::MINION)
+			_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, sprite_vec[0]->Sprite_card);
+		else
+			_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener_, sprite_vec[0]->Sprite_card);
 		for(int i = 1 ; i < player1._handcard._card.size() ;i++)
 		{
 			if(sprite_vec[i]->_type == CardType::MINION)
+				_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener->clone(),sprite_vec[i]->Sprite_card);
+			else
 				_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener->clone(),sprite_vec[i]->Sprite_card);
 		}
 
@@ -365,7 +387,6 @@ bool GameLayer::attack(int side, int m1, int m2)
 	return true;
 }
 
-
 /* 游戏结束,1己方输,2敌方输,3平局 */
 void GameLayer::end_game(int n)
 {
@@ -407,6 +428,8 @@ void GameLayer:: update_handcard(Player* p1 ,int num)
 		tmp_card->Sprite_card->setPosition(Point(SPACING + SPACING * ( size_card - i ), WINSIZE_H / 2-260));
 		if(tmp_card->_type == CardType::MINION)
 			h_add_touchListener(p1 ,&operator_position ,&battlefield_position ,size_card - i);
+		else
+			s_add_touchListener();
 		this->addChild(tmp_card->Sprite_card);
 	}
 
@@ -519,7 +542,7 @@ bool GameLayer:: b_add_touchListener(Player * p1,int side , int * operator_pos ,
 	return true;
 }
 
-/* 将战场需要 */
+/* 将战场中英雄需要监听的对象加入监听 */
 bool GameLayer:: bh_add_touchListener(Player * p1,int side)
 {
 	auto touchListener = EventListenerTouchOneByOne::create();
@@ -540,6 +563,12 @@ bool GameLayer:: h_add_touchListener(Player * p1, int * operator_pos ,int * batt
 	touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
 	touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener,  sprite_vec[tmp_pos]->Sprite_card);
+	return true;
+}
+
+/* 将手牌中的法术对象加入监听 */
+bool GameLayer:: s_add_touchListener()
+{
 	return true;
 }
 
@@ -789,6 +818,18 @@ void GameLayer::b_onTouchEnded(Touch *touch, Event *event)
 
 
 }; 
+
+bool GameLayer::s_onTouchBegan(Touch *touch, Event *event)
+{
+}
+
+void GameLayer::s_onTouchMoved(Touch *touch, Event *event)
+{
+}
+
+void GameLayer::s_onTouchEnded(Touch *touch, Event *event)
+{
+}
 
 string GameLayer::get_type(Minion *m)
 {
