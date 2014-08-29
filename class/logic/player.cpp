@@ -87,7 +87,7 @@ bool Player::use(int i, int pos, int side, int target)
 
 bool needTarget(int cardPosition)
 {
-  Card *card = _handcard.use_card(i);
+  Card *card = _handcard.getCard(cardPosition);
   if (card == NULL)
     return false;
   if (card->_type != SPELL)

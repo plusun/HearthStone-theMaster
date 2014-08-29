@@ -23,6 +23,10 @@ public:
     int ret = card->cost();
     return ret;
   }
+  Card *getCard(int position)
+  {
+    return NumberToCard(_card[position]);
+  }
   Card *use_card(int position)
   {
     if (position >= _card.size())
