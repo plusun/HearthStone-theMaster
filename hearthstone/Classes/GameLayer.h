@@ -18,7 +18,7 @@ extern bool Is_First;
 class GameLayer : public cocos2d::Layer
 {
 public:
-	bool init();
+	virtual bool init();
 	GameLayer():
 		b(new Battlefield()),
 		d1(new deck()),
@@ -54,7 +54,7 @@ public:
 	void timeCallback(float ct);
 	int update_battlefiled(Player* p1 ,int ,int * ,int *);
 	void update_battlefiled_all(bool);
-	void attack(int side, int m1, int m2);
+	bool attack(int side, int m1, int m2);
 	void update_handcard(Player* p1 ,int );
 	void refresh_mana();
 	void refresh_stat(Character* m, Touch* touch);
@@ -68,6 +68,9 @@ public:
 	Minion * find_minion(int);
 	void init_img();
 	void end_game(int n);
+	string get_type(Minion *);
+
+
 
 	virtual bool onTouchBegan(Touch *touch, Event *unused_event); 
     virtual void onTouchMoved(Touch *touch, Event *unused_event); 

@@ -30,5 +30,6 @@ public:
 	void login(string usrn, string pswd, int n);
 	bool check_login();
 	vector<int> opponent_turn();
+	void recv_log();
 };
 #endif

@@ -38,6 +38,7 @@ public:
   virtual void attacked(Character *c);
   virtual void damaged(int);
   Sprite * Sprite_card;
+  Sprite * Type;
 };
 
 class Hero: public Character

@@ -5,6 +5,7 @@
 #include "cocos-ext.h"
 #include "GameLayer.h"
 #include "CardLayer.h"
+#include "ReplayLayer.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT; 
@@ -23,6 +24,7 @@ public:
 	void GameMenuCallback(Object* pSender);
 	void exitMenuCallback(Object* pSender);
 	void cardMenuCallback(Object* pSender);
+	void repMenuCallback(Object* pSender);
 private:
 	int m_iCurMsgIndex;//no useful
 

@@ -120,39 +120,7 @@ Card *NumberToCard(int no, Battlefield *bf, int side)
       spell = new CircleOfHealing(bf, side);
       scard = new SpellCard(0, spell);
       break;
-    case 20:
-      mcard = new MinionCard(4, NULL);
-      mcard->minion(new ChillwindYeti());
-      break;
-    case 21:
-      mcard = new MinionCard(7, NULL);
-      mcard->minion(new CoreHound());
-      break;
-    case 22:
-      mcard = new MinionCard(7, NULL);
-      mcard->minion(new WarGolem());
-      break;
-    case 23:
-      mcard = new MinionCard(6, NULL);
-      mcard->minion(new BoulderfistOgre());
-      break;
-    case 24:
-      mcard = new MinionCard(3, NULL);
-      mcard->minion(new MagmaRager());
-      break;
-    case 25:
-      mcard = new MinionCard(1, NULL);
-      mcard->minion(new MurlocRaider());
-      break;
-    case 26:
-      mcard = new MinionCard(4, NULL);
-      mcard->minion(new OasisSnapjaw());
-      break;
-    case 27:
-      mcard = new MinionCard(2, NULL);
-      mcard->minion(new RiverCrocolisk());
-      break;
-
+      
     default:
       return NULL;
       break;

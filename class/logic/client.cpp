@@ -218,3 +218,15 @@ vector<int> client::opponent_turn()
 	free(message);
 	return vi;
 }
+
+void client::recv_log()
+{
+	char* buf = new char[1000];
+	//memset(buf,0,strlen(buf));
+	int n = recv(sockClient, buf, 1000, 0);
+	buf[n] = '\0';
+	ofstream file("log.txt",ios::out);
+	file << buf;
+	file.close();
+	delete []buf;
+}

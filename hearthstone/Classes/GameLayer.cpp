@@ -151,13 +151,14 @@ bool GameLayer::init()
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, sprite_vec[0]->Sprite_card);
 		for(int i = 1 ; i < player1._handcard._card.size() ;i++)
 		{
-			_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener->clone(),sprite_vec[i]->Sprite_card);
+			if(sprite_vec[i]->_type == CardType::MINION)
+				_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener->clone(),sprite_vec[i]->Sprite_card);
 		}
 
 		for(int i  = 0 ; i < player1._handcard._card.size() ; i++)
 		{
 			cl.draw_card(player1._handcard._card[i]);
-			Sleep(1000);
+			Sleep(200);
 		}
 	}
 	else
@@ -188,7 +189,8 @@ bool GameLayer::init()
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, sprite_vec[0]->Sprite_card);
 		for(int i = 1 ; i < player1._handcard._card.size() ;i++)
 		{
-			_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener->clone(),sprite_vec[i]->Sprite_card);
+			if(sprite_vec[i]->_type == CardType::MINION)
+				_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener->clone(),sprite_vec[i]->Sprite_card);
 		}
 
 		std::thread wait(GameLayer::wait_message, this, &player1 , &player2);
@@ -265,15 +267,21 @@ int GameLayer::update_battlefiled(Player * p1 ,int side ,int * operator_position
 		}
 		
 		/* add new minion the battlefield */
-		
-		//p1->_battlefield->_minion[side][tmp_pos] = find_minion(p1->_battlefield->_minion[side][tmp_pos]->no);
 		string str = CharacterToFilename(p1->_battlefield->_minion[side][tmp_pos]);
 		p1->_battlefield->_minion[side][tmp_pos]->Sprite_card = Sprite::create(str,Rect(0,0,90,128));
 		Point p = Point(60 + SPACING * tmp_pos + 45 , side * 200 + 140 + 64 );
 		p1->_battlefield->_minion[side][tmp_pos]->Sprite_card->setPosition(Point(60 + SPACING * tmp_pos + 45 , side * 200 + 140 + 64 ));
 		this->addChild(p1->_battlefield->_minion[side][tmp_pos]->Sprite_card);
 		b_add_touchListener(p1 ,side , operator_position , battlefield_position , tmp_pos);
-		
+		/* add the new minion's type*/
+		string str_ = get_type(p1->_battlefield->_minion[side][tmp_pos]);
+		CCLOG("str_ is %s",str_);
+		if(str_ != "")
+		{
+			p1->_battlefield->_minion[side][tmp_pos]->Type = Sprite::create(str_,Rect(0,0,20,20));
+			p1->_battlefield->_minion[side][tmp_pos]->Type->setPosition(Point(60 + SPACING * tmp_pos + 45 , side * 200 + 140 + 64 ));
+			this->addChild(p1->_battlefield->_minion[side][tmp_pos]->Type);
+		}
 		for(int i  = tmp_pos + 1 ; i <  p1->_battlefield->_minion[side].size(); i++)
 		{
 			if(p1->_battlefield->_minion[side][i] != NULL)
@@ -298,9 +306,18 @@ void GameLayer::update_battlefiled_all(bool visible)
 			CCLOG("visible : update 0");
 			player1._battlefield->_minion[0][i]->Sprite_card->setOpacity(255);
 			player1._battlefield->_minion[0][i]->Sprite_card->setPosition(60+100*i+45,140+64);
+			if(get_type(player1._battlefield->_minion[0][i]) != "")
+			{
+				player1._battlefield->_minion[0][i]->Type->setOpacity(255);
+				player1._battlefield->_minion[0][i]->Type->setPosition(60+100*i+45,140+64);
+			}
 		}
 		else
+		{
 			player1._battlefield->_minion[0][i]->Sprite_card->setOpacity(0);
+			if(get_type(player1._battlefield->_minion[0][i]) != "")
+				player1._battlefield->_minion[0][i]->Type->setOpacity(0);
+		}
 	}
 	for (int i = 0; i < player2._battlefield->_minion[1].size(); i++)
 	{
@@ -310,16 +327,25 @@ void GameLayer::update_battlefiled_all(bool visible)
 			CCLOG("visible : update 1");
 			player2._battlefield->_minion[1][i]->Sprite_card->setPosition(60+100*i+45,340+64);
 			player2._battlefield->_minion[1][i]->Sprite_card->setOpacity(255);
+			if(get_type(player1._battlefield->_minion[1][i]) != "")
+			{
+				player2._battlefield->_minion[1][i]->Type->setPosition(60+100*i+45,340+64);
+				player2._battlefield->_minion[1][i]->Type->setOpacity(255);
+			}
 		}
 		else
+		{
 			player2._battlefield->_minion[1][i]->Sprite_card->setOpacity(0);
+			if(get_type(player1._battlefield->_minion[1][i]) != "")
+				player2._battlefield->_minion[1][i]->Type->setOpacity(0);
+		}
 	}
 }
 
 /* side方m1进攻对方m2的后台和前台包装函数 */
-void GameLayer::attack(int side, int m1, int m2)
+bool GameLayer::attack(int side, int m1, int m2)
 {
-	update_battlefiled_all(false);
+
 	Character* c1;
 	Character* c2;
 	if (m1 == 8)
@@ -330,13 +356,15 @@ void GameLayer::attack(int side, int m1, int m2)
 		c2 = player1._battlefield->_hero[1-side];
 	else
 		c2 = player1._battlefield->_minion[1-side][m2];
-	player1._battlefield->attack(c1,c2);
+	if (player1._battlefield->attack(c1,c2) == false)
+		return false;
+
+	update_battlefiled_all(false);
 	player1._battlefield->checkAndDead();
-	int n = player1._battlefield->checkwin();
-	if (n)
-		end_game(n);
 	update_battlefiled_all(true);
+	return true;
 }
+
 
 /* 游戏结束,1己方输,2敌方输,3平局 */
 void GameLayer::end_game(int n)
@@ -355,6 +383,11 @@ void GameLayer::end_game(int n)
 	if (n == 3)
 		label.setString("You draw");
 	this->addChild(&label, 10);
+	
+	setTouchEnabled(false);
+
+	cl.recv_log();
+	//TODO:游戏结束，此时不可操作,可以退出
 }
 
 /* 更新手牌的信息 */
@@ -363,18 +396,20 @@ void GameLayer:: update_handcard(Player* p1 ,int num)
 	int size_card = p1->_handcard._card.size();
 	for(int i = num ; i > 0 ; i--)
 	{
-		Card* tmp_sprite;
+		Card* tmp_card;
 		if(player1.is_first)
-			tmp_sprite = NumberToCard(p1->_handcard._card[size_card - i],p1->_battlefield,0);
+			tmp_card = NumberToCard(p1->_handcard._card[size_card - i],p1->_battlefield,0);
 		else
-			tmp_sprite = NumberToCard(p1->_handcard._card[size_card - i],p1->_battlefield,1);
-		sprite_vec.push_back(tmp_sprite);
+			tmp_card = NumberToCard(p1->_handcard._card[size_card - i],p1->_battlefield,1);
+		sprite_vec.push_back(tmp_card);
 		string str = NumberToFilename(player1._handcard._card[size_card - i]);
-		tmp_sprite->Sprite_card = Sprite::create(str,Rect(0,0,90,128));
-		tmp_sprite->Sprite_card->setPosition(Point(SPACING + SPACING * ( size_card - i ), WINSIZE_H / 2-260));
-		h_add_touchListener(p1 ,&operator_position ,&battlefield_position ,size_card - i);
-		this->addChild(tmp_sprite->Sprite_card);
+		tmp_card->Sprite_card = Sprite::create(str,Rect(0,0,90,128));
+		tmp_card->Sprite_card->setPosition(Point(SPACING + SPACING * ( size_card - i ), WINSIZE_H / 2-260));
+		if(tmp_card->_type == CardType::MINION)
+			h_add_touchListener(p1 ,&operator_position ,&battlefield_position ,size_card - i);
+		this->addChild(tmp_card->Sprite_card);
 	}
+
 }
 
 /* 更新法力水晶显示 */
@@ -542,7 +577,7 @@ bool GameLayer::onTouchBegan(Touch *touch, Event *event)
 	return false;
 };
 
-void  GameLayer::onTouchMoved(Touch *touch, Event *event)
+void GameLayer::onTouchMoved(Touch *touch, Event *event)
 {
 		auto target = static_cast<Sprite*>(event->getCurrentTarget());
 		target->setPosition(target->getPosition() + touch->getDelta());
@@ -674,7 +709,7 @@ bool GameLayer::b_onTouchBegan(Touch *touch, Event *event)
 	return false;
 };
 
-void  GameLayer::b_onTouchMoved(Touch *touch, Event *event)
+void GameLayer::b_onTouchMoved(Touch *touch, Event *event)
 {
 	//	auto target = static_cast<Sprite*>(event->getCurrentTarget());
 	//	target->setPosition(target->getPosition() + touch->getDelta());
@@ -740,14 +775,38 @@ void GameLayer::b_onTouchEnded(Touch *touch, Event *event)
 		if (minion1_position >= 0 && minion2_position >= 0)
 		{
 			//TODO: minion1 attack minion2
-			if (player1._battlefield->_minion[0][minion1_position]->canAttack())
-			{
-				attack(0, minion1_position, minion2_position);
-				cl.attack(minion1_position, minion2_position);
-			}
-
+				if (attack(0, minion1_position, minion2_position))
+				{
+					cl.attack(minion1_position, minion2_position);
+					int n = player1._battlefield->checkwin();
+					if (n)
+					{
+						cl.win(n);
+						end_game(n);
+					}
+				}
 		}
+
+
 }; 
+
+string GameLayer::get_type(Minion *m)
+{
+	int tmp = 0;
+	if(m->buff._taunt == true)//嘲讽
+		tmp = 1;
+	else if(m->buff._charge == true)//冲锋
+		tmp = 2;
+	else if(m->buff._windfury == true)//风怒
+		tmp = 3;
+	else if(m->buff._stealth == true)//隐身
+		tmp = 4;
+	else
+		return "";
+	string str = to_string(tmp);
+
+	return  "point" + str + ".png";
+}
 
 void GameLayer::wait_message(GameLayer * g,Player * player1 , Player * player2)
 {
@@ -759,20 +818,23 @@ void GameLayer::wait_message(GameLayer * g,Player * player1 , Player * player2)
 	int _minion1;
 	int _minion2;
 	int _card;
+	int tmp;
 	while (1)
 	{
 		vector<int> vi = cl.opponent_turn();
 		switch (vi[0])
 		{
 			case 6:
-				if (vi[1] == '1')
-					;//TODO: you lose
+				if (vi[1] == 1)
+					tmp = 2;//TODO: you lose
 				else
-				if (vi[1] == '2')
-					;//TODO: you win
+				if (vi[1] == 2)
+					tmp = 1;//TODO: you win
 				else
-					;//TODO: draw
-				break;
+					tmp = 3;//TODO: draw
+				g->end_game(tmp);
+				//TODO:此时回收此线程
+				return ;
 			case 4:
 				//TODO: player2.endturn()
 				g->setTouchEnabled(true);
@@ -788,7 +850,7 @@ void GameLayer::wait_message(GameLayer * g,Player * player1 , Player * player2)
 					for(int i  = 0 ; i < player1->_handcard._card.size() ; i++)
 					{
 						cl.draw_card(player1->_handcard._card[i]);
-						Sleep(1000);
+						Sleep(200);
 					}
 				}
 				else
@@ -847,6 +909,8 @@ void GameLayer::init_img()
 		string str_tmp = vi[i];
 		Sprite * sp = Sprite::create(str_tmp);
 	}
+
+	//Sprite * sp_ = Sprite::create("point1.png");
 }
 
 Minion * GameLayer::find_minion(int no)
