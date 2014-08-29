@@ -152,6 +152,46 @@ Card *NumberToCard(int no, Battlefield *bf, int side)
       mcard = new MinionCard(2, NULL);
       mcard->minion(new RiverCrocolisk());
       break;
+    case 28:
+      mcard = new MinionCard(5, NULL);
+      mcard->minion(new FenCreeper());
+      break;
+    case 29:
+      mcard = new MinionCard(2, NULL);
+      mcard->minion(new Gnoll());
+      break;
+    case 30:
+      mcard = new MinionCard(4, NULL);
+      mcard->minion(new MoguShanWarden());
+      break;
+    case 31:
+      mcard = new MinionCard(1, NULL);
+      mcard->minion(new Shieldbearer());
+      break;
+    case 32:
+      mcard = new MinionCard(5, NULL);
+      mcard->minion(new BootyBayBodyguard());
+      break;
+    case 33:
+      mcard = new MinionCard(1, NULL);
+      mcard->minion(new GoldshireFootman());
+      break;
+    case 34:
+      mcard = new MinionCard(8, NULL);
+      mcard->minion(new IronbarkProtector());
+      break;
+    case 35:
+      mcard = new MinionCard(6, NULL);
+      mcard->minion(new LordOfTheArcena());
+      break;
+    case 36:
+      mcard = new MinionCard(4, NULL);
+      mcard->minion(new SenJinShieldmasta());
+      break;
+    case 37:
+      mcard = new MinionCard(1, NULL);
+      mcard->minion(new Voidwalker());
+      break;
 
     default:
       return NULL;

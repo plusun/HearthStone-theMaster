@@ -43,6 +43,8 @@ public:
     switch (target)
       {
       case SPECIFIC:
+	heroes.clear();
+	minions.clear();
 	if ((heroTarget == NULL && minionTarget == NULL) ||
 	    (heroTarget != NULL && minionTarget != NULL))
 	  return false;
