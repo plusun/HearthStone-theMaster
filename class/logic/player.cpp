@@ -47,7 +47,7 @@ void Player::over()
 }
 
 // use ith handcard
-bool Player::use(int i, int pos, Hero *hero, Minion *minion)
+bool Player::use(int i, int pos, int side, int target)
 {
   if (_handcard.getCost(i) > _mana.cur_mana())
     return false;
@@ -57,6 +57,8 @@ bool Player::use(int i, int pos, Hero *hero, Minion *minion)
   _mana.cost_mana(card->cost());
   MinionCard *c = NULL;
   SpellCard *s = NULL;
+  Hero *hero = NULL;
+  Minion *minion = NULL;
   switch (card->_type)
     {
     case MINION:
@@ -65,6 +67,14 @@ bool Player::use(int i, int pos, Hero *hero, Minion *minion)
       break;
     case SPELL:
       s = (SpellCard *)card;
+      if (side >= 0 && target >= 0)
+	{
+	  if (target == 8)
+	    hero = _battlefield->_hero[side];
+	  else
+	    if (target < _battlefield->_minion[side].size())
+	      minion = _battlefield->_minion[size][target];
+	}
       if (!s->spell->use(hero, minion))
 	return false;
       break;
@@ -73,6 +83,17 @@ bool Player::use(int i, int pos, Hero *hero, Minion *minion)
     }
   _battlefield->checkAndDead();
   return true;
+}
+
+bool needTarget(int cardPosition)
+{
+  Card *card = _handcard.use_card(i);
+  if (card == NULL)
+    return false;
+  if (card->_type != SPELL)
+    return false;
+  SpellCard *sc = (SpellCard *)card;
+  return sc->target == SPECIFIC;
 }
 
 bool Player::attack(int self, int whichSide, int other)

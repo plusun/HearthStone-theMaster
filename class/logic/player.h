@@ -33,7 +33,8 @@ public:
   void init();
   void turn();
   void over();
-  bool use(int , int pos = -1, Hero * = NULL, Minion * = NULL);
+  bool needTarget(int cardPosition);
+  bool use(int , int pos = -1, int = -1, int = -1);
 
   // return false if too many handcards
   bool draw();
