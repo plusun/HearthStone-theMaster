@@ -73,7 +73,7 @@ bool Player::use(int i, int pos, int side, int target)
 	    hero = _battlefield->_hero[side];
 	  else
 	    if (target < _battlefield->_minion[side].size())
-	      minion = _battlefield->_minion[size][target];
+	      minion = _battlefield->_minion[side][target];
 	}
       if (!s->spell->use(hero, minion))
 	return false;
