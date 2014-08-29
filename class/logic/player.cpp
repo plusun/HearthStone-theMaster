@@ -85,7 +85,7 @@ bool Player::use(int i, int pos, int side, int target)
   return true;
 }
 
-bool needTarget(int cardPosition)
+bool Player::needTarget(int cardPosition)
 {
   Card *card = _handcard.getCard(cardPosition);
   if (card == NULL)
@@ -93,7 +93,7 @@ bool needTarget(int cardPosition)
   if (card->_type != SPELL)
     return false;
   SpellCard *sc = (SpellCard *)card;
-  return sc->target == SPECIFIC;
+  return sc->spell->target == SPECIFIC;
 }
 
 bool Player::attack(int self, int whichSide, int other)
