@@ -182,7 +182,7 @@ Card *NumberToCard(int no, Battlefield *bf, int side)
       break;
     case 35:
       mcard = new MinionCard(6, NULL);
-      mcard->minion(new LordOfTheArcena());
+      mcard->minion(new LordOfTheArena());
       break;
     case 36:
       mcard = new MinionCard(4, NULL);
