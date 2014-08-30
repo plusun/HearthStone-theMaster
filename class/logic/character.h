@@ -30,7 +30,7 @@ public:
   bool frozen();
   void frozen(bool new_frozen);
   void deFrozen();
-  void tired(bool);
+  virtual void tired(bool);
   virtual bool tired();
   bool immune();
   void immune(int new_immune);

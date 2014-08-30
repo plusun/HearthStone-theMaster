@@ -205,6 +205,13 @@ bool Minion::tired()
   else
     return _tired > 1;
 }
+void Minion::tired(bool new_tired)
+{
+  if (new_tired)
+    ++_tired;
+  else
+    _tired = 0;
+}
 
 bool Minion::canAttack()
 {
