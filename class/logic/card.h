@@ -11,7 +11,7 @@
 USING_NS_CC;
 
 // max number of cards
-#define MAXCARDNO 37
+#define MAXCARDNO 49
 
 enum CardType { MINION, SPELL };
 

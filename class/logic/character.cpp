@@ -1,7 +1,7 @@
 #include "character.h"
 
 Character::Character(int h,  int a, int mh, bool f, bool i):
-  _health(h), _attack(a), _max_health(mh),  _frozen(f), _immune(i), _tired(false)
+  _health(h), _attack(a), _max_health(mh),  _frozen(f), _immune(i), _tired(0)
 {
   if (_max_health < 0)
     _max_health = h;
@@ -60,11 +60,14 @@ void Character::deFrozen()
 }
 bool Character::tired()
 {
-  return _tired;
+  return _tired > 0;
 }
 void Character::tired(bool new_tired)
 {
-  _tired = new_tired;
+  if (new_tired)
+    ++_tired;
+  else
+    _tired = 0;
 }
 bool Character::immune()
 {
@@ -193,6 +196,14 @@ void Minion::damaged(int damage)
 	damage -= debuf;
 	buff._hp -= debuf;
 	health(health() - damage);
+}
+
+bool Minion::tired()
+{
+  if (!buff._windfury)
+    return _tired > 0;
+  else
+    return _tired > 1;
 }
 
 bool Minion::canAttack()

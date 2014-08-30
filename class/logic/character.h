@@ -13,7 +13,8 @@ USING_NS_CC;
 class Character
 {
 private:
-  bool _immune, _tired;
+  bool _immune;
+  int _tired;
   int _health, _max_health, _frozen;
 protected:
   int _attack;
@@ -30,7 +31,7 @@ public:
   void frozen(bool new_frozen);
   void deFrozen();
   void tired(bool);
-  bool tired();
+  virtual bool tired();
   bool immune();
   void immune(int new_immune);
   virtual bool canAttack();
@@ -77,6 +78,7 @@ public:
   bool newMinion();
   void newMinion(bool);
   void damaged(int);
+  bool tired();
   bool canAttack();
   Race race();
 };

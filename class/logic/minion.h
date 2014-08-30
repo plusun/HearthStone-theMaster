@@ -4,7 +4,7 @@
 #include "character.h"
 #include "spell.h"
 
-#define MAXMINION 25
+#define MAXMINION 35
 
 class Wisp: public Minion
 {
@@ -244,6 +244,138 @@ public:
   {
     no = MAXHERONO + 23;
     buff._taunt = true;
+  }
+};
+
+class KingKrush: public Minion // 橙卡,霸王龙 冲锋 cost 9
+{
+public:
+  KingKrush():
+    Minion(beast, 8, 8)
+  {
+    no = MAXHERONO + 24;
+    buff._charge = true;
+  }
+};
+
+class DruidOfTheClaw: public Minion // 德鲁伊之爪? 冲锋 cost 5
+{
+public:
+  DruidOfTheClaw():
+    Minion(none, 4, 4)
+  {
+    no = MAXHERONO + 25;
+    buff._charge = true;
+  }
+};
+
+class BluegillWarrior: public Minion // 蓝鳃战士  cost 2
+{
+public:
+  BluegillWarrior():
+    Minion(murloc, 2, 1)
+  {
+    no = MAXHERONO + 26;
+    buff._charge = true;
+  }
+};
+
+class Huffer: public Minion // 冲锋猪 cost 3
+{
+public:
+  Huffer():
+    Minion(beast, 4, 2)
+  {
+    no = MAXHERONO + 27;
+    buff._charge = true;
+  }
+};
+
+class KorKronElite: public Minion // 啥战士,我也不知道 冲锋 cost 4
+{
+public:
+  KorKronElite():
+    Minion(none, 4, 3)
+  {
+    no = MAXHERONO + 28;
+    buff._charge = true;
+  }
+};
+
+class StormwindKnight: public Minion // 暴风雪勇士? cost 4
+{
+public:
+  StormwindKnight():
+    Minion(none, 2, 5)
+  {
+    no = MAXHERONO + 29;
+    buff._charge = true;
+  }
+};
+
+class RecklessRocketeer: public Minion // 鲁莽火箭兵 cost 6
+{
+public:
+  RecklessRocketeer():
+    Minion(none, 5, 2)
+  {
+    no = MAXHERONO + 30;
+    buff._charge = true;
+  }
+};
+
+class StonetuskBoar: public Minion // 冲锋野猪 cost 1
+{
+public:
+  StonetuskBoar():
+    Minion(beast, 1, 1)
+  {
+    no = MAXHERONO + 31;
+    buff._charge = true;
+  }
+};
+
+class Wolfrider: public Minion // 狼骑兵出动 cost 3
+{
+public:
+  Wolfrider():
+    Minion(none, 3, 1)
+  {
+    no = MAXHERONO + 32;
+    buff._charge = true;
+  }
+};
+
+class ThrallmarFarseer: public Minion // 萨尔玛先知 cost 3
+{
+public:
+  ThrallmarFarseer():
+    Minion(none, 2, 3)
+  {
+    no = MAXHERONO + 33;
+    buff._windfury = true;
+  }
+};
+
+class WindfuryHarpy: public Minion // 风怒的鹰身女妖 cost 6
+{
+public:
+  WindfuryHarpy():
+    Minion(none, 4, 5)
+  {
+    no = MAXHERONO + 34;
+    buff._windfury = true;
+  }
+};
+
+class YoungDragonhawk: public Minion // 幼龙鹰 cost 1
+{
+public:
+  YoungDragonhawk():
+    Minion(beast, 1, 1)
+  {
+    no = MAXHERONO + 35;
+    buff._windfury = true;
   }
 };
 
