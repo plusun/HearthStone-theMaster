@@ -14,10 +14,10 @@ class Character
 {
 private:
   bool _immune;
-  int _tired;
   int _health, _max_health, _frozen;
 protected:
   int _attack;
+  int _tired;
 public:
   int no;
   Character(int h,  int a, int mh = -1, bool f = false, bool i = false);
