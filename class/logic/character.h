@@ -79,6 +79,7 @@ public:
   void newMinion(bool);
   void damaged(int);
   bool tired();
+  void tired(bool);
   bool canAttack();
   Race race();
 };
