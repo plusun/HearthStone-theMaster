@@ -67,7 +67,8 @@ bool Player::use(int i, int pos, int side, int target)
       break;
     case SPELL:
       s = (SpellCard *)card;
-      if (side >= 0 && target >= 0)
+      if (side >= 0 && target >= 0
+	  && side < SIDE)
 	{
 	  if (target == 8)
 	    hero = _battlefield->_hero[side];
@@ -75,7 +76,9 @@ bool Player::use(int i, int pos, int side, int target)
 	    if (target < _battlefield->_minion[side].size())
 	      minion = _battlefield->_minion[side][target];
 	}
-      if (!s->spell->use(hero, minion))
+      if ((hero == NULL && minion == NULL) ||
+	  (hero != NULL && minion != NULL) ||
+	  !s->spell->use(hero, minion))
 	return false;
       break;
     default:
