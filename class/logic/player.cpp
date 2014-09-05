@@ -76,15 +76,12 @@ bool Player::use(int i, int pos, int side, int target)
 	    if (target < _battlefield->_minion[side].size())
 	      minion = _battlefield->_minion[side][target];
 	}
-      if ((hero == NULL && minion == NULL) ||
-	  (hero != NULL && minion != NULL) ||
-	  !s->spell->use(hero, minion))
+      if (!s->spell->use(hero, minion))
 	return false;
       break;
     default:
       break;
     }
-  _battlefield->checkAndDead();
   return true;
 }
 

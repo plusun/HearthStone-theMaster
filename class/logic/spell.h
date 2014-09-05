@@ -40,20 +40,19 @@ public:
   virtual bool use(Hero *heroTarget = NULL, Minion *minionTarget = NULL)
   {
     int MAXHP = 10086;
+    int number = 0;
     switch (target)
       {
       case SPECIFIC:
-	heroes.clear();
-	minions.clear();
-	if ((heroTarget == NULL && minionTarget == NULL) ||
-	    (heroTarget != NULL && minionTarget != NULL))
-	  return false;
 	heroes.clear();
 	minions.clear();
 	if (heroTarget != NULL)
 	  heroes.push_back(heroTarget);
 	if (minionTarget != NULL)
 	  minions.push_back(minionTarget);
+	number = heroes.size() + minions.size();
+	if (number != 1)
+	  return false;
 	break;
       case ALL:
 	heroes.clear();
@@ -192,7 +191,7 @@ public:
       default:
 	break;
       }
-    bf->checkAndDead();
+    
     return true;
   }
 };
